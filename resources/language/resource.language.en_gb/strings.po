@@ -1,0 +1,190 @@
+# Kodi Media Center language file
+# Addon Name: Artwork Dump
+# Addon id: service.artwork.dump
+msgid ""
+msgstr ""
+
+msgctxt "#32000"
+msgid "Media types to process automatically"
+msgstr ""
+
+msgctxt "#32001"
+msgid "Deselect media types to avoid pulling media lists from Kodi when there is nothing to do"
+msgstr ""
+
+# Messages
+
+msgctxt "#32020"
+msgid "Processing artwork"
+msgstr ""
+
+msgctxt "#32022"
+msgid "{0:d} artwork updated"
+msgstr ""
+
+msgctxt "#32023"
+msgid "No artwork updated"
+msgstr ""
+
+msgctxt "#32024"
+msgid "Error with provider '{0}'"
+msgstr ""
+
+msgctxt "#32034"
+msgid "Could not contact provider"
+msgstr ""
+
+msgctxt "#32035"
+msgid "web service error: {0}"
+msgstr ""
+
+msgctxt "#32037"
+# 0 = full filename
+msgid "Could not save image to file: {0}"
+msgstr ""
+
+msgctxt "#32039"
+msgid "Artwork caching requires Kodi setting 'Allow remote control via HTTP' enabled"
+msgstr ""
+
+msgctxt "#32040"
+msgid "File path charset unsupported: {0}"
+msgstr ""
+
+# Actions
+
+msgctxt "#32403"
+msgid "stop current process"
+msgstr ""
+
+msgctxt "#32410"
+msgid "Download existing artwork"
+msgstr ""
+
+msgctxt "#32419"
+msgid "download existing artwork for all videos"
+msgstr ""
+
+msgctxt "#32422"
+msgid "download existing artwork for all music"
+msgstr ""
+
+# Settings
+
+msgctxt "#32900"
+msgid "Add artwork for new videos after library updates"
+msgstr ""
+
+msgctxt "#32914"
+msgid "Replace episode 'thumb' with Kodi generated thumb"
+msgstr ""
+
+msgctxt "#32915"
+msgid "Replace movie 'thumb' with Kodi generated thumb"
+msgstr ""
+
+msgctxt "#32920"
+msgid "Replace music video 'thumb' with Kodi generated thumb"
+msgstr ""
+
+msgctxt "#32922"
+msgid "Add artwork for new music after library updates"
+msgstr ""
+
+msgctxt "#32924"
+msgid "Progress display for automatic processing"
+msgstr ""
+
+msgctxt "#32925"
+msgid "full progress bar"
+msgstr ""
+
+msgctxt "#32926"
+msgid "just warnings and errors"
+msgstr ""
+
+msgctxt "#32927"
+msgid "only add-on crashes"
+msgstr ""
+
+msgctxt "#32928"
+msgid "Show final artwork update count notification"
+msgstr ""
+
+msgctxt "#32931"
+msgid "Overwrite existing artwork files"
+msgstr ""
+
+msgctxt "#32941"
+msgid "Save movie artwork with movie base file name"
+msgstr ""
+
+msgctxt "#32942"
+msgid "Save music video artwork with music video base file name"
+msgstr ""
+
+msgctxt "#32952"
+msgid "Automatically preload local video library artwork to Kodi texture cache"
+msgstr ""
+
+msgctxt "#32953"
+msgid "Automatically preload local music library artwork to Kodi texture cache"
+msgstr ""
+
+msgctxt "#32976"
+msgid "Music library artwork to download"
+msgstr ""
+
+msgctxt "#32977"
+msgid "Video library artwork to download"
+msgstr ""
+
+msgctxt "#32978"
+msgid "None"
+msgstr ""
+
+msgctxt "#32979"
+msgid "All artwork"
+msgstr ""
+
+# Used in path exclusion
+
+msgctxt "#32820"
+msgid "Path exclusion"
+msgstr ""
+
+msgctxt "#32821"
+msgid "Use path exclusion"
+msgstr ""
+
+msgctxt "#32822"
+msgid "Exclude the following type"
+msgstr ""
+
+msgctxt "#32823"
+msgid "Folder"
+msgstr ""
+
+msgctxt "#32824"
+msgid "Path prefix"
+msgstr ""
+
+msgctxt "#32825"
+msgid "Regex"
+msgstr ""
+
+msgctxt "#32826"
+msgid "Exclude paths within folder"
+msgstr ""
+
+msgctxt "#32827"
+msgid "Exclude paths starting with"
+msgstr ""
+
+msgctxt "#32828"
+msgid "Exclude paths matching regex"
+msgstr ""
+
+msgctxt "#32829"
+msgid "Exclude another"
+msgstr ""

@@ -1,0 +1,1229 @@
+<?xml version="1.0" ?>
+<settings version="1">
+	<section id="script.artwork.dump">
+		<category id="general" label="128" help="">
+			<group id="1">
+				<setting id="enableservice" type="boolean" label="32900" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="enableservice_music" type="boolean" label="32922" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="overwrite_existing" type="boolean" label="32931" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="managed_mediatypes" type="list[string]" label="32000" help="32001">
+					<level>0</level>
+					<default>tvshow, season, episode, movie, set, musicvideo, artist, album</default>
+					<constraints>
+						<options>
+							<option>movie</option>
+							<option>set</option>
+							<option>tvshow</option>
+							<option>season</option>
+							<option>episode</option>
+							<option>musicvideo</option>
+							<option>artist</option>
+							<option>album</option>
+							<option>song</option>
+						</options>
+						<delimiter>, </delimiter>
+					</constraints>
+					<control type="list" format="string">
+						<multiselect>true</multiselect>
+					</control>
+				</setting>
+				<setting id="video_download_level" type="integer" label="32977" help="">
+					<level>0</level>
+					<default>0</default>
+					<constraints>
+						<options>
+							<option label="32979">0</option> <!-- All artwork -->
+							<option label="32978">1</option> <!-- None -->
+							<option label="39142">2</option> <!-- Custom -->
+						</options>
+					</constraints>
+					<control type="list" format="string" />
+				</setting>
+				<setting id="movieart_downloadlist" type="list[string]" parent="video_download_level" label="39143" help="">
+					<level>0</level>
+					<default></default>
+					<constraints>
+						<options>
+							<option>poster</option>
+							<option>fanart</option>
+							<option>clearart</option>
+							<option>discart</option>
+							<option>keyart</option>
+							<option>banner</option>
+							<option>landscape</option>
+							<option>clearlogo</option>
+						</options>
+						<delimiter>, </delimiter>
+						<allownewoption>true</allownewoption>
+					</constraints>
+					<dependencies>
+						<dependency type="visible" setting="video_download_level" operator="is">2</dependency>
+						<or>
+							<dependency type="enable" setting="managed_mediatypes" operator="contains">movie</dependency>
+							<dependency type="enable" setting="managed_mediatypes" operator="contains">set</dependency>
+						</or>
+					</dependencies>
+					<control type="list" format="string">
+						<multiselect>true</multiselect>
+						<addbuttonlabel>13516</addbuttonlabel>
+					</control>
+				</setting>
+				<setting id="tvshowart_downloadlist" type="list[string]" parent="video_download_level" label="39145" help="">
+					<level>0</level>
+					<default></default>
+					<constraints>
+						<options>
+							<option>poster</option>
+							<option>fanart</option>
+							<option>clearart</option>
+							<option>discart</option>
+							<option>keyart</option>
+							<option>banner</option>
+							<option>landscape</option>
+							<option>clearlogo</option>
+						</options>
+						<delimiter>, </delimiter>
+						<allownewoption>true</allownewoption>
+					</constraints>
+					<dependencies>
+						<dependency type="visible" setting="video_download_level" operator="is">2</dependency>
+						<or>
+							<dependency type="enable" setting="managed_mediatypes" operator="contains">tvshow</dependency>
+							<dependency type="enable" setting="managed_mediatypes" operator="contains">season</dependency>
+						</or>
+					</dependencies>
+					<control type="list" format="string">
+						<multiselect>true</multiselect>
+						<addbuttonlabel>13516</addbuttonlabel>
+					</control>
+				</setting>
+				<setting id="episodeart_downloadlist" type="list[string]" parent="video_download_level" label="39147" help="">
+					<level>0</level>
+					<default></default>
+					<constraints>
+						<options>
+							<option>fanart</option>
+						</options>
+						<delimiter>, </delimiter>
+						<allownewoption>true</allownewoption>
+					</constraints>
+					<dependencies>
+						<dependency type="visible" setting="video_download_level" operator="is">2</dependency>
+						<dependency type="enable" setting="managed_mediatypes" operator="contains">episode</dependency>
+					</dependencies>
+					<control type="list" format="string">
+						<multiselect>true</multiselect>
+						<addbuttonlabel>13516</addbuttonlabel>
+					</control>
+				</setting>
+				<setting id="musicvideoart_downloadlist" type="list[string]" parent="video_download_level" label="39149" help="">
+					<level>0</level>
+					<default></default>
+					<constraints>
+						<options>
+							<option>poster</option>
+							<option>fanart</option>
+							<option>clearart</option>
+							<option>discart</option>
+							<option>banner</option>
+							<option>landscape</option>
+							<option>clearlogo</option>
+						</options>
+						<delimiter>, </delimiter>
+						<allownewoption>true</allownewoption>
+					</constraints>
+					<dependencies>
+						<dependency type="visible" setting="video_download_level" operator="is">2</dependency>
+						<dependency type="enable" setting="managed_mediatypes" operator="contains">musicvideo</dependency>
+					</dependencies>
+					<control type="list" format="string">
+						<multiselect>true</multiselect>
+						<addbuttonlabel>13516</addbuttonlabel>
+					</control>
+				</setting>
+				<setting id="music_download_level" type="integer" label="32976" help="">
+					<level>0</level>
+					<default>0</default>
+					<constraints>
+						<options>
+							<option label="32979">0</option> <!-- All artwork -->
+							<option label="32978">1</option> <!-- None -->
+							<option label="39142">2</option> <!-- Custom -->
+						</options>
+					</constraints>
+					<control type="list" format="string" />
+				</setting>
+				<setting id="artistart_downloadlist" type="list[string]" parent="music_download_level" label="39131" help="39132">
+					<level>0</level>
+					<default></default>
+					<constraints>
+						<options>
+							<option>banner</option>
+							<option>clearart</option>
+							<option>clearlogo</option>
+							<option>landscape</option>
+							<option>fanart</option>
+						</options>
+						<delimiter>, </delimiter>
+						<allownewoption>true</allownewoption>
+					</constraints>
+					<dependencies>
+						<dependency type="visible" setting="music_download_level" operator="is">2</dependency>
+						<dependency type="enable" setting="managed_mediatypes" operator="contains">artist</dependency>
+					</dependencies>
+					<control type="list" format="string">
+						<multiselect>true</multiselect>
+						<addbuttonlabel>13516</addbuttonlabel>
+					</control>
+				</setting>
+				<setting id="albumart_downloadlist" type="list[string]" parent="music_download_level" label="39133" help="39134">
+					<level>0</level>
+					<default></default>
+					<constraints>
+						<options>
+							<option>discart</option>
+							<option>back</option>
+							<option>spine</option>
+							<option>3dcase</option>
+							<option>3dflat</option>
+							<option>3dface</option>
+						</options>
+						<delimiter>, </delimiter>
+						<allownewoption>true</allownewoption>
+					</constraints>
+					<dependencies>
+						<dependency type="visible" setting="music_download_level" operator="is">2</dependency>
+						<dependency type="enable" setting="managed_mediatypes" operator="contains">album</dependency>
+					</dependencies>
+					<control type="list" format="string">
+						<multiselect>true</multiselect>
+						<addbuttonlabel>13516</addbuttonlabel>
+					</control>
+				</setting>
+				<setting id="songart_downloadlist" type="list[string]" parent="music_download_level" label="39133" help="39134">
+					<level>0</level>
+					<default></default>
+					<constraints>
+						<delimiter>, </delimiter>
+						<allownewoption>true</allownewoption>
+					</constraints>
+					<dependencies>
+						<dependency type="visible" setting="music_download_level" operator="is">2</dependency>
+						<dependency type="enable" setting="managed_mediatypes" operator="contains">song</dependency>
+					</dependencies>
+					<control type="list" format="string">
+						<multiselect>true</multiselect>
+						<addbuttonlabel>13516</addbuttonlabel>
+					</control>
+				</setting>
+			</group>
+		</category>
+		<category id="advanced" label="10038" help="">
+			<group id="1">
+				<setting id="progress_display" type="integer" label="32924" help="">
+					<level>0</level>
+					<default>0</default>
+					<constraints>
+						<options>
+							<option label="32925">0</option>
+							<option label="32926">1</option>
+							<option label="32927">2</option>
+						</options>
+					</constraints>
+					<control type="list" format="string">
+						<heading>32924</heading>
+					</control>
+				</setting>
+				<setting id="final_notification" type="boolean" label="32928" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="cache_local_video_artwork" type="boolean" label="32952" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="cache_local_music_artwork" type="boolean" label="32953" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="togglecontextoff" type="action" label="32413" help="">
+					<level>0</level>
+					<data>Skin.ToggleSetting(disablecontext:script.artwork.dump)</data>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<condition on="property" name="InfoBool">Skin.HasSetting(disablecontext:script.artwork.dump)</condition>
+						</dependency>
+					</dependencies>
+					<control type="button" format="action"/>
+				</setting>
+				<setting id="togglecontexton" type="action" label="32412" help="">
+					<level>0</level>
+					<data>Skin.ToggleSetting(disablecontext:script.artwork.dump)</data>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<condition on="property" name="InfoBool">!Skin.HasSetting(disablecontext:script.artwork.dump)</condition>
+						</dependency>
+					</dependencies>
+					<control type="button" format="action"/>
+				</setting>
+			</group>
+			<group id="2" label="744">
+				<setting id="episode.thumb_generate" type="boolean" label="32914" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+					<dependencies>
+						<dependency type="enable" setting="managed_mediatypes" operator="contains">episode</dependency>
+					</dependencies>
+				</setting>
+				<setting id="movie.thumb_generate" type="boolean" label="32915" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+					<dependencies>
+						<dependency type="enable" setting="managed_mediatypes" operator="contains">movie</dependency>
+					</dependencies>
+				</setting>
+				<setting id="musicvideo.thumb_generate" type="boolean" label="32920" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+					<dependencies>
+						<dependency type="enable" setting="managed_mediatypes" operator="contains">musicvideo</dependency>
+					</dependencies>
+				</setting>
+				<setting id="savewith_basefilename" type="boolean" label="32941" help="">
+					<level>0</level>
+					<default>true</default>
+					<control type="toggle"/>
+					<dependencies>
+						<dependency type="enable" setting="managed_mediatypes" operator="contains">movie</dependency>
+					</dependencies>
+				</setting>
+				<setting id="savewith_basefilename_mvids" type="boolean" label="32942" help="">
+					<level>0</level>
+					<default>true</default>
+					<control type="toggle"/>
+					<dependencies>
+						<dependency type="enable" setting="managed_mediatypes" operator="contains">musicvideo</dependency>
+					</dependencies>
+				</setting>
+			</group>
+			<group id="3" label="32820">
+				<setting id="exclude.path.option_1" type="boolean" label="32821" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="exclude.path.type_1" type="integer" label="32822" help="">
+					<level>0</level>
+					<default>0</default>
+					<constraints>
+						<options>
+							<option label="32823">0</option>
+							<option label="32824">1</option>
+							<option label="32825">2</option>
+						</options>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="exclude.path.option_1">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="list" format="string">
+						<heading>32822</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.folder_1" type="path" label="32826" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<sources>
+							<source/>
+						</sources>
+						<writable>false</writable>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_1">true</condition>
+								<condition operator="is" setting="exclude.path.type_1">0</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="button" format="path">
+						<heading>32826</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.prefix_1" type="string" label="32827" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_1">true</condition>
+								<condition operator="is" setting="exclude.path.type_1">1</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32827</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.regex_1" type="string" label="32828" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_1">true</condition>
+								<condition operator="is" setting="exclude.path.type_1">2</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32828</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.option_2" type="boolean" label="32829" help="">
+					<level>0</level>
+					<default>false</default>
+					<dependencies>
+						<dependency type="visible">
+							<or>
+								<condition operator="is" setting="exclude.path.option_1">true</condition>
+								<condition operator="is" setting="exclude.path.option_2">true</condition>
+							</or>
+						</dependency>
+					</dependencies>
+					<control type="toggle"/>
+				</setting>
+				<setting id="exclude.path.type_2" type="integer" label="32822" help="">
+					<level>0</level>
+					<default>0</default>
+					<constraints>
+						<options>
+							<option label="32823">0</option>
+							<option label="32824">1</option>
+							<option label="32825">2</option>
+						</options>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="exclude.path.option_2">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="list" format="string">
+						<heading>32822</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.folder_2" type="path" label="32826" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<sources>
+							<source/>
+						</sources>
+						<writable>false</writable>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_2">true</condition>
+								<condition operator="is" setting="exclude.path.type_2">0</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="button" format="path">
+						<heading>32826</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.prefix_2" type="string" label="32827" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_2">true</condition>
+								<condition operator="is" setting="exclude.path.type_2">1</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32827</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.regex_2" type="string" label="32828" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_2">true</condition>
+								<condition operator="is" setting="exclude.path.type_2">2</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32828</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.option_3" type="boolean" label="32829" help="">
+					<level>0</level>
+					<default>false</default>
+					<dependencies>
+						<dependency type="visible">
+							<or>
+								<condition operator="is" setting="exclude.path.option_2">true</condition>
+								<condition operator="is" setting="exclude.path.option_3">true</condition>
+							</or>
+						</dependency>
+					</dependencies>
+					<control type="toggle"/>
+				</setting>
+				<setting id="exclude.path.type_3" type="integer" label="32822" help="">
+					<level>0</level>
+					<default>0</default>
+					<constraints>
+						<options>
+							<option label="32823">0</option>
+							<option label="32824">1</option>
+							<option label="32825">2</option>
+						</options>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="exclude.path.option_3">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="list" format="string">
+						<heading>32822</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.folder_3" type="path" label="32826" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<sources>
+							<source/>
+						</sources>
+						<writable>false</writable>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_3">true</condition>
+								<condition operator="is" setting="exclude.path.type_3">0</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="button" format="path">
+						<heading>32826</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.prefix_3" type="string" label="32827" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_3">true</condition>
+								<condition operator="is" setting="exclude.path.type_3">1</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32827</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.regex_3" type="string" label="32828" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_3">true</condition>
+								<condition operator="is" setting="exclude.path.type_3">2</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32828</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.option_4" type="boolean" label="32829" help="">
+					<level>0</level>
+					<default>false</default>
+					<dependencies>
+						<dependency type="visible">
+							<or>
+								<condition operator="is" setting="exclude.path.option_3">true</condition>
+								<condition operator="is" setting="exclude.path.option_4">true</condition>
+							</or>
+						</dependency>
+					</dependencies>
+					<control type="toggle"/>
+				</setting>
+				<setting id="exclude.path.type_4" type="integer" label="32822" help="">
+					<level>0</level>
+					<default>0</default>
+					<constraints>
+						<options>
+							<option label="32823">0</option>
+							<option label="32824">1</option>
+							<option label="32825">2</option>
+						</options>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="exclude.path.option_4">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="list" format="string">
+						<heading>32822</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.folder_4" type="path" label="32826" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<sources>
+							<source/>
+						</sources>
+						<writable>false</writable>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_4">true</condition>
+								<condition operator="is" setting="exclude.path.type_4">0</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="button" format="path">
+						<heading>32826</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.prefix_4" type="string" label="32827" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_4">true</condition>
+								<condition operator="is" setting="exclude.path.type_4">1</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32827</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.regex_4" type="string" label="32828" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_4">true</condition>
+								<condition operator="is" setting="exclude.path.type_4">2</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32828</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.option_5" type="boolean" label="32829" help="">
+					<level>0</level>
+					<default>false</default>
+					<dependencies>
+						<dependency type="visible">
+							<or>
+								<condition operator="is" setting="exclude.path.option_4">true</condition>
+								<condition operator="is" setting="exclude.path.option_5">true</condition>
+							</or>
+						</dependency>
+					</dependencies>
+					<control type="toggle"/>
+				</setting>
+				<setting id="exclude.path.type_5" type="integer" label="32822" help="">
+					<level>0</level>
+					<default>0</default>
+					<constraints>
+						<options>
+							<option label="32823">0</option>
+							<option label="32824">1</option>
+							<option label="32825">2</option>
+						</options>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="exclude.path.option_5">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="list" format="string">
+						<heading>32822</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.folder_5" type="path" label="32826" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<sources>
+							<source/>
+						</sources>
+						<writable>false</writable>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_5">true</condition>
+								<condition operator="is" setting="exclude.path.type_5">0</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="button" format="path">
+						<heading>32826</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.prefix_5" type="string" label="32827" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_5">true</condition>
+								<condition operator="is" setting="exclude.path.type_5">1</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32827</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.regex_5" type="string" label="32828" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_5">true</condition>
+								<condition operator="is" setting="exclude.path.type_5">2</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32828</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.option_6" type="boolean" label="32829" help="">
+					<level>0</level>
+					<default>false</default>
+					<dependencies>
+						<dependency type="visible">
+							<or>
+								<condition operator="is" setting="exclude.path.option_5">true</condition>
+								<condition operator="is" setting="exclude.path.option_6">true</condition>
+							</or>
+						</dependency>
+					</dependencies>
+					<control type="toggle"/>
+				</setting>
+				<setting id="exclude.path.type_6" type="integer" label="32822" help="">
+					<level>0</level>
+					<default>0</default>
+					<constraints>
+						<options>
+							<option label="32823">0</option>
+							<option label="32824">1</option>
+							<option label="32825">2</option>
+						</options>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="exclude.path.option_6">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="list" format="string">
+						<heading>32822</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.folder_6" type="path" label="32826" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<sources>
+							<source/>
+						</sources>
+						<writable>false</writable>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_6">true</condition>
+								<condition operator="is" setting="exclude.path.type_6">0</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="button" format="path">
+						<heading>32826</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.prefix_6" type="string" label="32827" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_6">true</condition>
+								<condition operator="is" setting="exclude.path.type_6">1</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32827</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.regex_6" type="string" label="32828" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_6">true</condition>
+								<condition operator="is" setting="exclude.path.type_6">2</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32828</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.option_7" type="boolean" label="32829" help="">
+					<level>0</level>
+					<default>false</default>
+					<dependencies>
+						<dependency type="visible">
+							<or>
+								<condition operator="is" setting="exclude.path.option_6">true</condition>
+								<condition operator="is" setting="exclude.path.option_7">true</condition>
+							</or>
+						</dependency>
+					</dependencies>
+					<control type="toggle"/>
+				</setting>
+				<setting id="exclude.path.type_7" type="integer" label="32822" help="">
+					<level>0</level>
+					<default>0</default>
+					<constraints>
+						<options>
+							<option label="32823">0</option>
+							<option label="32824">1</option>
+							<option label="32825">2</option>
+						</options>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="exclude.path.option_7">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="list" format="string">
+						<heading>32822</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.folder_7" type="path" label="32826" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<sources>
+							<source/>
+						</sources>
+						<writable>false</writable>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_7">true</condition>
+								<condition operator="is" setting="exclude.path.type_7">0</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="button" format="path">
+						<heading>32826</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.prefix_7" type="string" label="32827" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_7">true</condition>
+								<condition operator="is" setting="exclude.path.type_7">1</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32827</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.regex_7" type="string" label="32828" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_7">true</condition>
+								<condition operator="is" setting="exclude.path.type_7">2</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32828</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.option_8" type="boolean" label="32829" help="">
+					<level>0</level>
+					<default>false</default>
+					<dependencies>
+						<dependency type="visible">
+							<or>
+								<condition operator="is" setting="exclude.path.option_7">true</condition>
+								<condition operator="is" setting="exclude.path.option_8">true</condition>
+							</or>
+						</dependency>
+					</dependencies>
+					<control type="toggle"/>
+				</setting>
+				<setting id="exclude.path.type_8" type="integer" label="32822" help="">
+					<level>0</level>
+					<default>0</default>
+					<constraints>
+						<options>
+							<option label="32823">0</option>
+							<option label="32824">1</option>
+							<option label="32825">2</option>
+						</options>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="exclude.path.option_8">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="list" format="string">
+						<heading>32822</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.folder_8" type="path" label="32826" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<sources>
+							<source/>
+						</sources>
+						<writable>false</writable>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_8">true</condition>
+								<condition operator="is" setting="exclude.path.type_8">0</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="button" format="path">
+						<heading>32826</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.prefix_8" type="string" label="32827" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_8">true</condition>
+								<condition operator="is" setting="exclude.path.type_8">1</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32827</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.regex_8" type="string" label="32828" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_8">true</condition>
+								<condition operator="is" setting="exclude.path.type_8">2</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32828</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.option_9" type="boolean" label="32829" help="">
+					<level>0</level>
+					<default>false</default>
+					<dependencies>
+						<dependency type="visible">
+							<or>
+								<condition operator="is" setting="exclude.path.option_8">true</condition>
+								<condition operator="is" setting="exclude.path.option_9">true</condition>
+							</or>
+						</dependency>
+					</dependencies>
+					<control type="toggle"/>
+				</setting>
+				<setting id="exclude.path.type_9" type="integer" label="32822" help="">
+					<level>0</level>
+					<default>0</default>
+					<constraints>
+						<options>
+							<option label="32823">0</option>
+							<option label="32824">1</option>
+							<option label="32825">2</option>
+						</options>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="exclude.path.option_9">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="list" format="string">
+						<heading>32822</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.folder_9" type="path" label="32826" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<sources>
+							<source/>
+						</sources>
+						<writable>false</writable>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_9">true</condition>
+								<condition operator="is" setting="exclude.path.type_9">0</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="button" format="path">
+						<heading>32826</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.prefix_9" type="string" label="32827" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_9">true</condition>
+								<condition operator="is" setting="exclude.path.type_9">1</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32827</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.regex_9" type="string" label="32828" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_9">true</condition>
+								<condition operator="is" setting="exclude.path.type_9">2</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32828</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.option_10" type="boolean" label="32829" help="">
+					<level>0</level>
+					<default>false</default>
+					<dependencies>
+						<dependency type="visible">
+							<or>
+								<condition operator="is" setting="exclude.path.option_9">true</condition>
+								<condition operator="is" setting="exclude.path.option_10">true</condition>
+							</or>
+						</dependency>
+					</dependencies>
+					<control type="toggle"/>
+				</setting>
+				<setting id="exclude.path.type_10" type="integer" label="32822" help="">
+					<level>0</level>
+					<default>0</default>
+					<constraints>
+						<options>
+							<option label="32823">0</option>
+							<option label="32824">1</option>
+							<option label="32825">2</option>
+						</options>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="exclude.path.option_10">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="list" format="string">
+						<heading>32822</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.folder_10" type="path" label="32826" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<sources>
+							<source/>
+						</sources>
+						<writable>false</writable>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_10">true</condition>
+								<condition operator="is" setting="exclude.path.type_10">0</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="button" format="path">
+						<heading>32826</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.prefix_10" type="string" label="32827" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_10">true</condition>
+								<condition operator="is" setting="exclude.path.type_10">1</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32827</heading>
+					</control>
+				</setting>
+				<setting id="exclude.path.regex_10" type="string" label="32828" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<and>
+								<condition operator="is" setting="exclude.path.option_10">true</condition>
+								<condition operator="is" setting="exclude.path.type_10">2</condition>
+							</and>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>32828</heading>
+					</control>
+				</setting>
+			</group>
+		</category>
+	</section>
+</settings>
