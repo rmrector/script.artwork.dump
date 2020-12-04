@@ -101,41 +101,6 @@ def get_songs(mediatype=None, dbid=None, songfilter=None):
         songfilter = {mediatype + 'id': dbid}
     return get_item_list(mediatypes.SONG, {'filter': songfilter})
 
-def get_tvshows(moreprops=False, includeprops=True):
-    json_request = get_base_json_request('VideoLibrary.GetTVShows')
-    if includeprops:
-        json_request['params']['properties'] = typemap[mediatypes.TVSHOW][1] + ['year', 'plot'] \
-            if moreprops else typemap[mediatypes.TVSHOW][1]
-    json_request['params']['sort'] = {'method': 'sorttitle', 'order': 'ascending'}
-
-    json_result = pykodi.execute_jsonrpc(json_request)
-    if check_json_result(json_result, 'tvshows', json_request):
-        result = json_result['result']['tvshows']
-        return result
-    else:
-        return []
-
-def get_episodes(tvshow_id=None, limit=None):
-    params = {'sort': {'method': 'dateadded', 'order': 'descending'}}
-    if tvshow_id:
-        params['tvshowid'] = tvshow_id
-    if limit:
-        params['limits'] = {'end': limit}
-    return get_item_list(mediatypes.EPISODE, params, typemap[mediatypes.EPISODE][1])
-
-def get_seasons(tvshow_id=-1):
-    json_request = get_base_json_request('VideoLibrary.GetSeasons')
-    if tvshow_id != -1:
-        json_request['params']['tvshowid'] = tvshow_id
-    json_request['params']['properties'] = typemap[mediatypes.SEASON][1]
-
-    json_result = pykodi.execute_jsonrpc(json_request)
-
-    if check_json_result(json_result, 'seasons', json_request):
-        return json_result['result']['seasons']
-    else:
-        return []
-
 def set_item_details(dbid, mediatype, **details):
     assert mediatype in typemap
 
