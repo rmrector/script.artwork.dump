@@ -4,6 +4,7 @@ import xbmc
 from artworkprocessor import ArtworkProcessor
 from libs import mediainfo as info, mediatypes, pykodi, quickjson
 from libs.addonsettings import settings
+from libs.pykodi import log
 
 STATUS_IDLE = 'idle'
 STATUS_SIGNALLED = 'signalled'
@@ -133,9 +134,11 @@ class ArtworkService(xbmc.Monitor):
             self.status = STATUS_IDLE
 
     def process_allvideos(self):
+        log("Processing all video items")
         return self._process_mediatypes(mediatypes.videotypes)
 
     def process_allmusic(self):
+        log("Processing all music items")
         return self._process_mediatypes(mediatypes.audiotypes)
 
     def _process_mediatypes(self, media_types):
@@ -151,6 +154,7 @@ class ArtworkService(xbmc.Monitor):
         return result
 
     def process_recentvideos(self):
+        log("Processing recently added videos")
         newitems = []
         added_seasons = []
         added_moviesets = []
@@ -180,11 +184,11 @@ class ArtworkService(xbmc.Monitor):
         self.processor.process_chunkedlist([newitems])
 
     def onSettingsChanged(self):
-        pykodi.log("updating settings")
+        log("updating settings")
         settings.update_settings()
         mediatypes.update_settings()
 
 if __name__ == '__main__':
-    pykodi.log('Service started')
+    log('Service started')
     ArtworkService().run()
-    pykodi.log('Service stopped')
+    log('Service stopped')
