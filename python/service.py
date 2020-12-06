@@ -152,10 +152,27 @@ class ArtworkService(xbmc.Monitor):
 
     def process_recentvideos(self):
         newitems = []
+        added_seasons = []
+        added_moviesets = []
         for mediatype in self.recentvideos:
             for mediaid in self.recentvideos[mediatype]:
                 jsonitem = quickjson.get_item_details(mediaid, mediatype)
                 newitems.append(info.MediaItem(jsonitem))
+
+                if mediatype == mediatypes.EPISODE and \
+                        jsonitem.get('seasonid') and \
+                        jsonitem['seasonid'] not in added_seasons:
+                    seasonitem = quickjson.get_item_details(jsonitem['seasonid'], mediatypes.SEASON)
+                    newitems.append(info.MediaItem(seasonitem))
+                    added_seasons.append(jsonitem['seasonid'])
+
+                if mediatype == mediatypes.MOVIE and \
+                        jsonitem.get('setid') and \
+                        jsonitem['setid'] not in added_moviesets:
+                    setitem = quickjson.get_item_details(jsonitem['setid'], mediatypes.MOVIESET)
+                    newitems.append(info.MediaItem(setitem))
+                    added_moviesets.append(jsonitem['setid'])
+
                 if self.abortRequested():
                     return
 
