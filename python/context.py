@@ -12,7 +12,7 @@ def main():
     if dbid and mediatype:
         processor = ArtworkProcessor()
         item = quickjson.get_item_details(dbid, mediatype)
-        processor.process_chunkedlist([[info.MediaItem(item)]], True)
+        processor.process_list((info.MediaItem(item),), True)
 
 def get_mediatype(listitem):
     mediatype = listitem.getVideoInfoTag().getMediaType()

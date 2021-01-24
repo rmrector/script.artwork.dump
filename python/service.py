@@ -142,46 +142,44 @@ class ArtworkService(xbmc.Monitor):
         return self._process_mediatypes(mediatypes.audiotypes)
 
     def _process_mediatypes(self, media_types):
-        def chunk_filler():
-            for mediatype in media_types:
-                for chunk in quickjson.gen_chunked_item_list(mediatype):
-                    if self.abortRequested():
-                        yield False
-                    golist = [info.MediaItem(item) for item in chunk]
-                    yield golist
+        media_lists = [quickjson.iter_item_list(mediatype) for mediatype in media_types]
+        totalcount = sum(media_list[1] for media_list in media_lists)
 
-        result = self.processor.process_chunkedlist(chunk_filler())
+        def flatten_to_mediaitems(media_lists):
+            for medialist in media_lists:
+                for mediaitem in medialist[0]:
+                    yield info.MediaItem(mediaitem)
+
+        result = self.processor.process_list_with_total(flatten_to_mediaitems(media_lists), totalcount)
         return result
 
     def process_recentvideos(self):
         log("Processing recently added videos")
-        newitems = []
+        totalcount = sum(len(self.recentvideos[mediatype]) for mediatype in self.recentvideos)
+        if self.processor.process_list_with_total(self.iter_recentvideos(), totalcount):
+            self.reset_recent()
+
+    def iter_recentvideos(self):
         added_seasons = []
         added_moviesets = []
         for mediatype in self.recentvideos:
             for mediaid in self.recentvideos[mediatype]:
                 jsonitem = quickjson.get_item_details(mediaid, mediatype)
-                newitems.append(info.MediaItem(jsonitem))
+                yield info.MediaItem(jsonitem)
 
                 if mediatype == mediatypes.EPISODE and \
                         jsonitem.get('seasonid') and \
                         jsonitem['seasonid'] not in added_seasons:
                     seasonitem = quickjson.get_item_details(jsonitem['seasonid'], mediatypes.SEASON)
-                    newitems.append(info.MediaItem(seasonitem))
+                    yield info.MediaItem(seasonitem)
                     added_seasons.append(jsonitem['seasonid'])
 
                 if mediatype == mediatypes.MOVIE and \
                         jsonitem.get('setid') and \
                         jsonitem['setid'] not in added_moviesets:
                     setitem = quickjson.get_item_details(jsonitem['setid'], mediatypes.MOVIESET)
-                    newitems.append(info.MediaItem(setitem))
+                    yield info.MediaItem(setitem)
                     added_moviesets.append(jsonitem['setid'])
-
-                if self.abortRequested():
-                    return
-
-        self.reset_recent()
-        self.processor.process_chunkedlist([newitems])
 
     def onSettingsChanged(self):
         log("updating settings")

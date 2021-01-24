@@ -40,7 +40,7 @@ def get_item_list(mediatype, extraparams=None, overrideprops=None):
     result_key = mediatype + 's'
     if not check_json_result(json_result, result_key, json_request):
         return []
-    return _inner_get_result(json_result, mediatype)
+    return _extract_result_list(json_result, mediatype)
 
 def _inner_get_item_list(mediatype, extraparams=None, overrideprops=None):
     assert mediatype in typemap
@@ -48,38 +48,61 @@ def _inner_get_item_list(mediatype, extraparams=None, overrideprops=None):
     mapped = typemap[mediatype]
     basestr = 'VideoLibrary.Get{0}s' if mediatype not in mediatypes.audiotypes else 'AudioLibrary.Get{0}s'
     json_request = get_base_json_request(basestr.format(mapped[0]))
-    json_request['params']['sort'] = {'method': 'sorttitle', 'order': 'ascending'}
+    sort_method = 'sorttitle' if mediatype != mediatypes.EPISODE else 'tvshowtitle'
+    json_request['params']['sort'] = {'method': sort_method, 'order': 'ascending'}
     json_request['params']['properties'] = mapped[1] if overrideprops is None else overrideprops
     if extraparams:
         json_request['params'].update(extraparams)
     json_result = pykodi.execute_jsonrpc(json_request)
     return json_request, json_result
 
-def _inner_get_result(json_result, mediatype):
+def _extract_result_list(json_result, mediatype):
     result = json_result['result'][mediatype + 's']
     return result
 
-def gen_chunked_item_list(mediatype, extraparams=None, overrideprops=None, chunksize=1000):
-    if mediatype == mediatypes.EPISODE:
-        chunksize *= 4
-    if extraparams is None:
-        extraparams = {}
-    result_key = mediatype + 's'
+def iter_item_list(mediatype):
+    first_and_count = _get_first_item_and_count(mediatype)
+    if not first_and_count[0]:
+        return (), 0
+    first_item, totalcount = first_and_count
 
+    return _get_iter_with_first(mediatype, first_item), totalcount
+
+def _get_first_item_and_count(mediatype):
+    extraparams = {'limits': {'start': 0, 'end': 1}}
+    json_request, json_result = _inner_get_item_list(mediatype, extraparams)
+    if not check_json_result(json_result, mediatype + 's', json_request):
+        return None, 0
+
+    total = json_result['result']['limits']['total']
+    itemlist = _extract_result_list(json_result, mediatype)
+    if not itemlist:
+        return None, 0
+    return itemlist[0], total
+
+def _get_iter_with_first(mediatype, first_item):
+    yield first_item
+    for item in _get_iter(mediatype):
+        yield item
+
+def _get_iter(mediatype):
+    chunksize = 4000 if mediatype == mediatypes.EPISODE else 1000
     source_exhausted = False
-    lastend = 0
+    lastend = 1
     while not source_exhausted:
-        extraparams['limits'] = {'start': lastend, 'end': lastend + chunksize}
+        extraparams = {'limits': {'start': lastend, 'end': lastend + chunksize}}
 
-        json_request, json_result = _inner_get_item_list(mediatype, extraparams, overrideprops)
-        if not check_json_result(json_result, result_key, json_request):
+        json_request, json_result = _inner_get_item_list(mediatype, extraparams)
+        if not check_json_result(json_result, mediatype + 's', json_request):
             break
 
-        if lastend + chunksize >= json_result['result']['limits']['total']:
+        total = json_result['result']['limits']['total']
+        if lastend + chunksize >= total:
             source_exhausted = True
         lastend = json_result['result']['limits']['end']
 
-        yield _inner_get_result(json_result, mediatype)
+        for item in _extract_result_list(json_result, mediatype):
+            yield item
 
 def get_albums(artistname=None, dbid=None):
     if artistname is None or dbid is None:
