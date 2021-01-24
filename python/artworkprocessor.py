@@ -6,7 +6,7 @@ import xbmcgui
 from filemanager import FileManager, FileError
 from libs import mediainfo as info, mediatypes, quickjson
 from libs.addonsettings import settings, PROGRESS_DISPLAY_FULLPROGRESS, PROGRESS_DISPLAY_NONE, EXCLUSION_PATH_TYPE_FOLDER, EXCLUSION_PATH_TYPE_PREFIX, EXCLUSION_PATH_TYPE_REGEX
-from libs.pykodi import localize as L, log, get_conditional
+from libs.pykodi import localize as L, log, get_conditional, thumbnailimages
 from libs.quickjson import JSONException
 
 ADDING_ARTWORK_MESSAGE = 32020
@@ -109,6 +109,14 @@ class ArtworkProcessor(object):
     def _process_item(self, mediaitem, auto=True):
         log("Processing {0} '{1}' automatically.".format(mediaitem.mediatype, mediaitem.label))
         mediatype = mediaitem.mediatype
+
+        if mediatypes.generatethumb(mediaitem.mediatype) and \
+                not mediaitem.art.get('thumb', '').startswith(thumbnailimages):
+            newthumb = info.build_video_thumbnail_path(mediaitem.file)
+            if newthumb:
+                mediaitem.updatedart['thumb'] = newthumb
+                if 'thumb' in mediaitem.art:
+                    del mediaitem.art['thumb']
 
         services_hit, error = self.downloader.downloadfor(mediaitem)
         if mediaitem.updatedart:
