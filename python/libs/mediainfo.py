@@ -3,7 +3,7 @@ import re
 import xbmc
 import xbmcvfs
 from functools import wraps
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 
 from libs import mediatypes, pykodi, quickjson, utils
 from libs.addonsettings import settings
@@ -24,7 +24,7 @@ idmap = (('episodeid', mediatypes.EPISODE),
 class MediaItem(object):
     def __init__(self, jsondata):
         self.label = jsondata['label']
-        self.file = jsondata.get('file')
+        self.file = unquotearchive(jsondata.get('file'))
         self.mediatype, self.dbid = get_mediatype_id(jsondata)
 
         self.art = get_own_artwork(jsondata)
@@ -66,6 +66,12 @@ class MediaItem(object):
         self.error = None
         self.missingid = False
         self.borked_filename = self.file and '\xef\xbf\xbd' in self.file
+
+def unquotearchive(filepath):
+    if not filepath or not filepath.startswith(('rar://', 'zip://')):
+        return filepath
+    result = filepath[6:].split('/', 1)[0]
+    return unquote(result)
 
 def build_music_label(jsondata):
     return jsondata['artist'][0] + ' - ' + jsondata['title'] if jsondata.get('artist') else jsondata['title']
