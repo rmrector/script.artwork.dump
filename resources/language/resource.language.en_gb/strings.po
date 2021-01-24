@@ -61,6 +61,14 @@ msgctxt "#32410"
 msgid "Download existing artwork"
 msgstr ""
 
+msgctxt "#32412"
+msgid "Disable Artwork Dump context items [I](per skin)[/I]"
+msgstr ""
+
+msgctxt "#32413"
+msgid "Enable Artwork Dump context items [I](per skin)[/I]"
+msgstr ""
+
 msgctxt "#32419"
 msgid "download existing artwork for all videos"
 msgstr ""
