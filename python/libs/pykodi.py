@@ -86,10 +86,19 @@ def log(message, level=xbmc.LOGDEBUG, tag=None):
         message = str(message)
     elif not isinstance(message, str):
         message = json.dumps(message, cls=PrettyJSONEncoder)
+    if not check_utf8(message):
+        return
 
     addontag = ADDONID if not tag else ADDONID + ':' + tag
     file_message = '[%s] %s' % (addontag, message)
     xbmc.log(file_message, level)
+
+def check_utf8(string):
+    try:
+        string.encode('utf-8')
+        return True
+    except UnicodeEncodeError:
+        return False
 
 def unquoteimage(imagestring):
     # extracted thumbnail images need to keep their 'image://' encoding

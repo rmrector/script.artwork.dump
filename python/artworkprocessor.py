@@ -6,7 +6,7 @@ import xbmcgui
 from filemanager import FileManager, FileError
 from libs import mediainfo as info, mediatypes, quickjson
 from libs.addonsettings import settings, PROGRESS_DISPLAY_FULLPROGRESS, PROGRESS_DISPLAY_NONE, EXCLUSION_PATH_TYPE_FOLDER, EXCLUSION_PATH_TYPE_PREFIX, EXCLUSION_PATH_TYPE_REGEX
-from libs.pykodi import localize as L, log, get_conditional, thumbnailimages
+from libs.pykodi import localize as L, log, get_conditional, thumbnailimages, check_utf8
 from libs.quickjson import JSONException
 
 ADDING_ARTWORK_MESSAGE = 32020
@@ -167,6 +167,8 @@ class ProgressDisplay(object):
             self.visible = True
 
     def update_progress(self, message: str, heading: str=None, final_update=False):
+        if not check_utf8(message):
+            message = None
         if self.visible and self.display_full_progress:
             percent = 100 if final_update else \
                 self.currentcount * 100 // self.totalcount
