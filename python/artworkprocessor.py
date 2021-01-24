@@ -201,7 +201,7 @@ def add_art_to_library(mediatype, dbid, selectedart):
     info.remove_local_from_texturecache(selectedart.values())
 
 def populate_centraldirs():
-    # INFO: out here because there is no callback to detect changes like there is for add-on settings
+    # INFO: out here because there is no callback to detect changes for Kodi settings like there is for add-on settings
     path = quickjson.get_settingvalue('musiclibrary.artistsfolder')
     mediatypes.central_directories[mediatypes.ARTIST] = path
 

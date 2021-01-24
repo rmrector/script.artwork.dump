@@ -70,11 +70,11 @@ msgid "Enable Artwork Dump context items [I](per skin)[/I]"
 msgstr ""
 
 msgctxt "#32419"
-msgid "download existing artwork for all videos"
+msgid "download existing artwork for all video library items"
 msgstr ""
 
 msgctxt "#32422"
-msgid "download existing artwork for all music"
+msgid "download existing artwork for all music library items"
 msgstr ""
 
 # Settings

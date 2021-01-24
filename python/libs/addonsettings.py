@@ -3,8 +3,6 @@ import xbmcaddon
 
 from libs import pykodi
 
-addon = xbmcaddon.Addon()
-
 PROGRESS_DISPLAY_FULLPROGRESS = 0
 PROGRESS_DISPLAY_WARNINGSERRORS = 1
 PROGRESS_DISPLAY_NONE = 2 # Only add-on crashes
@@ -19,10 +17,11 @@ class Settings(object):
         self.update_useragent()
 
     def update_useragent(self):
-        addonversion = addon.getAddonInfo('version')
+        addonversion = xbmcaddon.Addon().getAddonInfo('version')
         self.useragent = 'ArtworkDump/{0} '.format(addonversion) + xbmc.getUserAgent()
 
     def update_settings(self):
+        addon = xbmcaddon.Addon()
         self.enableservice = addon.getSettingBool('enableservice')
         self.enableservice_music = addon.getSettingBool('enableservice_music')
         self.progressdisplay = addon.getSettingInt('progress_display')

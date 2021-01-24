@@ -82,15 +82,13 @@ def execute_jsonrpc(jsonrpc_command):
     return json.loads(json_result)
 
 def log(message, level=xbmc.LOGDEBUG, tag=None):
-    level_tag = ''
-
     if isinstance(message, (dict, list)) and len(message) > 300:
         message = str(message)
     elif not isinstance(message, str):
         message = json.dumps(message, cls=PrettyJSONEncoder)
 
     addontag = ADDONID if not tag else ADDONID + ':' + tag
-    file_message = '%s[%s] %s' % (level_tag, addontag, message)
+    file_message = '[%s] %s' % (addontag, message)
     xbmc.log(file_message, level)
 
 def unquoteimage(imagestring):

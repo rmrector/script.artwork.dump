@@ -28,7 +28,7 @@ class FileManager(object):
         self.size = 0
         self.fileerror_count = 0
         self.provider_errors = {}
-        self.alreadycached = None if not bigcache else []
+        self.alreadycached = None if not bigcache else set()
         self._build_imagecachebase()
 
     def _build_imagecachebase(self):
@@ -85,8 +85,6 @@ class FileManager(object):
                 self.provider_errors[hostname] = self.provider_errors.get(hostname, 0) + 1
                 continue
             if not result:
-                # 404 URL dead, wipe it so we can add another one later
-                mediaitem.updatedart[arttype] = None
                 continue
             self.size += int(result.headers.get('content-length', 0))
             services_hit = True
@@ -134,7 +132,7 @@ class FileManager(object):
 
     def set_bigcache(self):
         if self.alreadycached is None:
-            self.alreadycached = []
+            self.alreadycached = set()
 
     def cachefor(self, artmap, multiplethreads=False):
         if not self.imagecachebase:
@@ -144,11 +142,11 @@ class FileManager(object):
             return 0
         if self.alreadycached is not None:
             if not self.alreadycached:
-                self.alreadycached = [pykodi.unquoteimage(texture['url']) for texture in quickjson.get_textures()
-                    if not pykodi.unquoteimage(texture['url']).startswith(('http', 'image'))]
+                self.alreadycached = set(pykodi.unquoteimage(texture['url']) for texture in quickjson.get_textures()
+                    if not pykodi.unquoteimage(texture['url']).startswith(('http', 'image')))
             alreadycached = self.alreadycached
         else:
-            alreadycached = [pykodi.unquoteimage(texture['url']) for texture in quickjson.get_textures(urls)]
+            alreadycached = set(pykodi.unquoteimage(texture['url']) for texture in quickjson.get_textures(urls))
         count = [0]
         def worker(path):
             try:

@@ -263,26 +263,26 @@
 				</setting>
 				<setting id="togglecontextoff" type="action" label="32413" help="">
 					<level>0</level>
-					<data>Skin.ToggleSetting(disablecontext:script.artwork.dump)</data>
+					<data>Skin.ToggleSetting(enablecontext:script.artwork.dump)</data>
 					<constraints>
 						<allowempty>true</allowempty>
 					</constraints>
 					<dependencies>
 						<dependency type="visible">
-							<condition on="property" name="InfoBool">Skin.HasSetting(disablecontext:script.artwork.dump)</condition>
+							<condition on="property" name="InfoBool">!Skin.HasSetting(enablecontext:script.artwork.dump)</condition>
 						</dependency>
 					</dependencies>
 					<control type="button" format="action"/>
 				</setting>
 				<setting id="togglecontexton" type="action" label="32412" help="">
 					<level>0</level>
-					<data>Skin.ToggleSetting(disablecontext:script.artwork.dump)</data>
+					<data>Skin.ToggleSetting(enablecontext:script.artwork.dump)</data>
 					<constraints>
 						<allowempty>true</allowempty>
 					</constraints>
 					<dependencies>
 						<dependency type="visible">
-							<condition on="property" name="InfoBool">!Skin.HasSetting(disablecontext:script.artwork.dump)</condition>
+							<condition on="property" name="InfoBool">Skin.HasSetting(enablecontext:script.artwork.dump)</condition>
 						</dependency>
 					</dependencies>
 					<control type="button" format="action"/>
