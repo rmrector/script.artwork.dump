@@ -41,6 +41,7 @@ class Getter(object):
                     return
 
         if result.status_code == 404:
+            result.close()
             return
         result.raise_for_status()
         return result

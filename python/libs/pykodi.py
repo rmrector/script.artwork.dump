@@ -78,6 +78,8 @@ def execute_jsonrpc(jsonrpc_command):
         except UnicodeDecodeError:
             jsonrpc_command = json.dumps(jsonrpc_command, ensure_ascii=False)
 
+    if not check_utf8(jsonrpc_command):
+        return {}
     json_result = xbmc.executeJSONRPC(jsonrpc_command)
     return json.loads(json_result)
 

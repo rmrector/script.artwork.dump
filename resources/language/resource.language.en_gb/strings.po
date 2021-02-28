@@ -30,6 +30,11 @@ msgctxt "#32024"
 msgid "Error with provider '{0}'"
 msgstr ""
 
+# 0: media type - movie/series/seasons/episodes
+msgctxt "#32028"
+msgid "Listing all {0}"
+msgstr ""
+
 msgctxt "#32034"
 msgid "Could not contact provider"
 msgstr ""
@@ -41,6 +46,10 @@ msgstr ""
 msgctxt "#32037"
 # 0 = full filename
 msgid "Could not save image to file: {0}"
+msgstr ""
+
+msgctxt "#32038"
+msgid "{0:d} artwork cached"
 msgstr ""
 
 msgctxt "#32039"
@@ -75,6 +84,14 @@ msgstr ""
 
 msgctxt "#32422"
 msgid "download existing artwork for all music library items"
+msgstr ""
+
+msgctxt "#32424"
+msgid "Preload local video library artwork to texture cache"
+msgstr ""
+
+msgctxt "#32425"
+msgid "Preload local music library artwork to texture cache"
 msgstr ""
 
 # Settings

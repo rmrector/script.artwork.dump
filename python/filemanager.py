@@ -150,7 +150,8 @@ class FileManager(object):
         count = [0]
         def worker(path):
             try:
-                res, _ = self.doget(self.imagecachebase + urlparse.quote(pykodi.quoteimage(path), ''), stream=True)
+                res = self.getter(self.imagecachebase + urlparse.quote(pykodi.quoteimage(path), ''),
+                    stream=True, timeout=1)
                 if res:
                     res.iter_content(chunk_size=1024)
                     res.close()

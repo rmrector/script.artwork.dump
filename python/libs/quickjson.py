@@ -48,13 +48,17 @@ def _inner_get_item_list(mediatype, extraparams=None, overrideprops=None):
     mapped = typemap[mediatype]
     basestr = 'VideoLibrary.Get{0}s' if mediatype not in mediatypes.audiotypes else 'AudioLibrary.Get{0}s'
     json_request = get_base_json_request(basestr.format(mapped[0]))
-    sort_method = 'sorttitle' if mediatype != mediatypes.EPISODE else 'tvshowtitle'
-    json_request['params']['sort'] = {'method': sort_method, 'order': 'ascending'}
+    json_request['params']['sort'] = {'method': _determine_sort_method(mediatype), 'order': 'ascending'}
     json_request['params']['properties'] = mapped[1] if overrideprops is None else overrideprops
     if extraparams:
         json_request['params'].update(extraparams)
     json_result = pykodi.execute_jsonrpc(json_request)
     return json_request, json_result
+
+def _determine_sort_method(mediatype):
+    if mediatype in (mediatypes.EPISODE, mediatypes.SEASON):
+        return 'tvshowtitle'
+    return 'sorttitle'
 
 def _extract_result_list(json_result, mediatype):
     result = json_result['result'][mediatype + 's']
