@@ -7,7 +7,7 @@ NFO files, or other add-ons. Kodi 19 Matrix only.
 ## Usage
 
 Run from "Program Add-ons" to download artwork for all video or music library items. It can also be
-configured to download artwork automatically after libary updates.
+configured to download artwork automatically after library updates.
 
 ## Installation
 

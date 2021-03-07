@@ -7,20 +7,12 @@ import time
 import urllib
 import xbmc
 import xbmcaddon
-import xbmcvfs
 from datetime import datetime
 
 try:
     datetime.strptime('2112-04-01', '%Y-%m-%d')
 except TypeError:
     pass
-
-_log_level_tag_lookup = {
-    xbmc.LOGDEBUG: 'D',
-    xbmc.LOGINFO: 'I'
-}
-
-_log_scrub_strings = {}
 
 ADDONID = 'script.artwork.dump'
 
@@ -117,20 +109,6 @@ def quoteimage(imagestring):
     result = 'image://{0}/'.format(urllib.parse.quote(imagestring, '()!'))
     result = re.sub(r'%[0-9A-F]{2}', lambda mo: mo.group().lower(), result)
     return result
-
-def get_command(*first_arg_keys):
-    command = {}
-    start = len(first_arg_keys) if first_arg_keys else 1
-    for x in range(start, len(sys.argv)):
-        arg = sys.argv[x].split("=")
-        command[arg[0].strip().lower()] = arg[1].strip() if len(arg) > 1 else True
-
-    if first_arg_keys:
-        for i, argkey in enumerate(first_arg_keys, 1):
-            if len(sys.argv) <= i:
-                break
-            command[argkey] = sys.argv[i]
-    return command
 
 class ObjectJSONEncoder(json.JSONEncoder):
     # Will still flop on circular objects

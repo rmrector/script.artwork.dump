@@ -149,7 +149,7 @@ msgid "only add-on crashes"
 msgstr ""
 
 msgctxt "#32928"
-msgid "Show final artwork update count notification"
+msgid "Show final artwork update count as a notification"
 msgstr ""
 
 msgctxt "#32931"
@@ -173,11 +173,11 @@ msgid "Automatically preload local music library artwork to Kodi texture cache"
 msgstr ""
 
 msgctxt "#32976"
-msgid "Music library artwork to download"
+msgid "Music library artwork types to download"
 msgstr ""
 
 msgctxt "#32977"
-msgid "Video library artwork to download"
+msgid "Video library artwork types to download"
 msgstr ""
 
 msgctxt "#32978"
@@ -185,7 +185,7 @@ msgid "None"
 msgstr ""
 
 msgctxt "#32979"
-msgid "All artwork"
+msgid "All artwork types"
 msgstr ""
 
 # Used in path exclusion
