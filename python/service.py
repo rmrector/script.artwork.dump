@@ -4,6 +4,7 @@ import xbmc
 from artworkprocessor import ArtworkProcessor
 from libs import mediainfo as info, mediatypes, pykodi, quickjson
 from libs.addonsettings import settings
+from libs.processeditems import ProcessedItems
 from libs.pykodi import log
 
 STATUS_IDLE = 'idle'
@@ -15,6 +16,7 @@ class ArtworkService(xbmc.Monitor):
         super(ArtworkService, self).__init__()
         self.abort = False
         self.processor = ArtworkProcessor(self)
+        self.processed = ProcessedItems()
         self.recentvideos = {'movie': [], 'tvshow': [], 'episode': [], 'musicvideo': []}
         self.stoppeditems = set()
         self._signal = None
@@ -76,12 +78,18 @@ class ArtworkService(xbmc.Monitor):
             elif self.signal:
                 self.signal = None
                 self.processor.close_progress()
-        elif method == 'Other.ProcessVideos':
+        elif method == 'Other.ProcessNewVideos':
             self.processor.create_progress()
-            self.signal = 'videos'
-        elif method == 'Other.ProcessMusic':
+            self.signal = 'newvideos'
+        elif method == 'Other.ProcessAllVideos':
             self.processor.create_progress()
-            self.signal = 'music'
+            self.signal = 'allvideos'
+        elif method == 'Other.ProcessNewMusic':
+            self.processor.create_progress()
+            self.signal = 'newmusic'
+        elif method == 'Other.ProcessAllMusic':
+            self.processor.create_progress()
+            self.signal = 'allmusic'
         elif method == 'Player.OnStop':
             if settings.enableservice:
                 data = json.loads(data)
@@ -92,7 +100,7 @@ class ArtworkService(xbmc.Monitor):
                 self.abort = True
         elif method == 'VideoLibrary.OnScanFinished':
             if settings.enableservice:
-                self.signal = 'videos'
+                self.signal = 'newvideos'
                 self.processor.create_progress()
         elif method == 'VideoLibrary.OnUpdate':
             if not settings.enableservice:
@@ -122,35 +130,45 @@ class ArtworkService(xbmc.Monitor):
                     self.signal = 'recentvideos_really'
                     continue
                 self.status = STATUS_PROCESSING
-                if signal == 'videos':
+                if signal == 'allvideos':
                     successful = self.process_allvideos()
                     self.notify_finished('Video', successful)
-                if signal == 'music':
+                if signal == 'newvideos':
+                    successful = self.process_allvideos(self.processed.does_not_exist)
+                    self.notify_finished('Video', successful)
+                if signal == 'allmusic':
                     successful = self.process_allmusic()
+                    self.notify_finished('Music', successful)
+                if signal == 'newmusic':
+                    successful = self.process_allmusic(self.processed.does_not_exist)
                     self.notify_finished('Music', successful)
                 elif signal == 'recentvideos_really':
                     self.process_recentvideos()
 
             self.status = STATUS_IDLE
 
-    def process_allvideos(self):
+    def process_allvideos(self, shouldinclude_fn=None):
         log("Processing all video items")
-        return self._process_mediatypes(mediatypes.videotypes)
+        return self._process_mediatypes(mediatypes.videotypes, shouldinclude_fn)
 
-    def process_allmusic(self):
+    def process_allmusic(self, shouldinclude_fn=None):
         log("Processing all music items")
-        return self._process_mediatypes(mediatypes.audiotypes)
+        return self._process_mediatypes(mediatypes.audiotypes, shouldinclude_fn)
 
-    def _process_mediatypes(self, media_types):
+    def _process_mediatypes(self, media_types, shouldinclude_fn):
         media_lists = [quickjson.iter_item_list(mediatype) for mediatype in media_types]
         totalcount = sum(media_list[1] for media_list in media_lists)
 
-        def flatten_to_mediaitems(media_lists):
+        def flatten_to_mediaitems():
             for medialist in media_lists:
                 for mediaitem in medialist[0]:
-                    yield info.MediaItem(mediaitem)
+                    item = info.MediaItem(mediaitem)
+                    if not shouldinclude_fn or shouldinclude_fn(item.dbid, item.mediatype, item.label):
+                        yield item
+                    else:
+                        yield None
 
-        result = self.processor.process_list_with_total(flatten_to_mediaitems(media_lists), totalcount)
+        result = self.processor.process_list_with_total(flatten_to_mediaitems(), totalcount)
         return result
 
     def process_recentvideos(self):

@@ -96,6 +96,8 @@ def log(message, level=xbmc.LOGDEBUG, tag=None):
     xbmc.log(file_message, level)
 
 def check_utf8(string):
+    if not string:
+        return True
     try:
         string.encode('utf-8')
         return True

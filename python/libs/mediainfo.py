@@ -9,6 +9,7 @@ from libs import mediatypes, pykodi, quickjson, utils
 from libs.addonsettings import settings
 from libs.mediatypes import _split_arttype as split_arttype
 from libs.pykodi import log, unquoteimage, localize as L
+from libs.quickjson import JSONException
 
 # get_mediatype_id must evaluate these in order
 idmap = (('episodeid', mediatypes.EPISODE),
@@ -89,6 +90,45 @@ def get_own_artwork(jsondata):
     _remove_bad_icon(result)
     return result
 
+def _get_multiple_fanart(existingart, dbid, mediatype):
+    if settings.max_multiple_fanart == 0:
+        return existingart
+    maxcount = _get_max_assigned_fanart(existingart)
+    if maxcount >= 1 or maxcount >= settings.max_multiple_fanart:
+        return existingart
+
+    existing_fanarturls = set(url for arttype, url in existingart.items() if split_arttype(arttype)[0] == 'fanart')
+    try:
+        availableart = quickjson.get_available_art(dbid, mediatype, 'fanart')
+        toadd_urls = []
+        for art_option in availableart:
+            url = unquoteimage(art_option['url'])
+            if url not in existing_fanarturls and url not in toadd_urls:
+                toadd_urls.append(url)
+
+        counter = maxcount + 1
+        for newurl in toadd_urls[counter:]:
+            if counter > settings.max_multiple_fanart:
+                break
+            key = 'fanart' + (str(counter) if counter else '')
+            existingart[key] = newurl
+            log("adding " + newurl + " as " + key)
+            counter += 1
+    except JSONException as ex:
+        log("Can't get multiple fanart for item, Kodi 19.0 final version or later required\n" + str(ex))
+        pass
+
+    return existingart
+
+def _get_max_assigned_fanart(existingart):
+    maxcount = -1
+    for arttype in existingart:
+        basetype, idx = split_arttype(arttype)
+        if basetype == "fanart":
+            maxcount = max(idx, maxcount)
+
+    return maxcount
+
 def _remove_bad_icon(artwork_dict):
     if 'icon' not in artwork_dict:
         return
@@ -120,12 +160,15 @@ def build_video_thumbnail_path(videofile_path):
 def add_additional_iteminfo(mediaitem):
     '''Get more data from the Kodi library.'''
     if mediaitem.mediatype == mediatypes.SEASON:
-        tvshow = quickjson.get_item_details(mediaitem.tvshowid, mediatypes.TVSHOW)
+        tvshow = get_cached_tvshow(mediaitem.tvshowid)
         mediaitem.file = tvshow['file']
     elif mediaitem.mediatype == mediatypes.ALBUM:
         folders = _identify_album_folders(mediaitem)
         if folders:
             mediaitem.file, mediaitem.discfolders = folders
+
+    if mediatypes.add_multipleart(mediaitem.mediatype):
+        mediaitem.art = _get_multiple_fanart(mediaitem.art, mediaitem.dbid, mediaitem.mediatype)
 
 def _identify_album_folders(mediaitem):
     songs = get_cached_songs(mediaitem.albumid)

@@ -9,7 +9,9 @@ from libs.pykodi import check_utf8, localize as L
 
 class M(object):
     STOP = 32403
+    FOR_NEW_VIDEOS = 32417
     FOR_ALL_VIDEOS = 32419
+    FOR_NEW_AUDIO = 32420
     FOR_ALL_AUDIO = 32422
     CACHE_VIDEO_ARTWORK = 32424
     CACHE_MUSIC_ARTWORK = 32425
@@ -36,8 +38,10 @@ def main():
         options = [(L(M.STOP), 'CancelCurrent')]
     else:
         options = [
-            (L(M.FOR_ALL_VIDEOS), 'ProcessVideos'),
-            (L(M.FOR_ALL_AUDIO), 'ProcessMusic'),
+            (L(M.FOR_NEW_VIDEOS), 'ProcessNewVideos'),
+            (L(M.FOR_ALL_VIDEOS), 'ProcessAllVideos'),
+            (L(M.FOR_NEW_AUDIO), 'ProcessNewMusic'),
+            (L(M.FOR_ALL_AUDIO), 'ProcessAllMusic'),
             (L(M.CACHE_VIDEO_ARTWORK), cache_artwork),
             (L(M.CACHE_MUSIC_ARTWORK), lambda: cache_artwork('music'))
         ]
@@ -76,7 +80,7 @@ def runon_medialist(function, heading, medialist='videos', typelabel=None, fg=Fa
         steps_to_run = [(lambda: quickjson.get_item_list(mediatypes.ARTIST), L(M.ARTISTS)),
             (lambda: quickjson.get_item_list(mediatypes.ALBUM), L(M.ALBUMS)),
             (lambda: quickjson.get_item_list(mediatypes.SONG), L(M.SONGS))]
-    else: # medialist is a list of items already
+    else: # medialist is already a list of items
         steps_to_run = ((lambda: medialist, typelabel),)
     stepsize = 100 // len(steps_to_run)
 

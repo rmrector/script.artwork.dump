@@ -78,8 +78,16 @@ msgctxt "#32413"
 msgid "Enable Artwork Dump context items [I](per skin)[/I]"
 msgstr ""
 
+msgctxt "#32417"
+msgid "download existing artwork for new video library items"
+msgstr ""
+
 msgctxt "#32419"
 msgid "download existing artwork for all video library items"
+msgstr ""
+
+msgctxt "#32420"
+msgid "download existing artwork for new music library items"
 msgstr ""
 
 msgctxt "#32422"
@@ -95,6 +103,14 @@ msgid "Preload local music library artwork to texture cache"
 msgstr ""
 
 # Settings
+
+msgctxt "#32700"
+msgid "Add additional 'fanart' from available scraper results to 'fanart#'"
+msgstr ""
+
+msgctxt "#32701"
+msgid "Add additional 'fanart' from available scraper results for media types"
+msgstr ""
 
 msgctxt "#32900"
 msgid "Add artwork for new videos after library updates"

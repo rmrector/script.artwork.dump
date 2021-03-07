@@ -228,6 +228,41 @@
 						<addbuttonlabel>13516</addbuttonlabel>
 					</control>
 				</setting>
+				<setting id="max_multiple_fanart" type="integer" label="32700" help="">
+					<level>0</level>
+					<default>0</default>
+					<constraints>
+						<minimum>0</minimum>
+						<maximum>20</maximum>
+						<step>1</step>
+					</constraints>
+					<control type="slider" format="integer">
+						<popup>false</popup>
+					</control>
+				</setting>
+				<setting id="multiple_fanart_mediatypes" type="list[string]" label="32701" help="32001">
+					<level>0</level>
+					<default>tvshow, season, movie, set, musicvideo, artist, album</default>
+					<constraints>
+						<options>
+							<option>movie</option>
+							<option>set</option>
+							<option>tvshow</option>
+							<option>season</option>
+							<option>episode</option>
+							<option>musicvideo</option>
+							<option>artist</option>
+							<option>album</option>
+						</options>
+						<delimiter>, </delimiter>
+					</constraints>
+					<dependencies>
+						<dependency type="visible" setting="max_multiple_fanart" operator="!is">0</dependency>
+					</dependencies>
+					<control type="list" format="string">
+						<multiselect>true</multiselect>
+					</control>
+				</setting>
 			</group>
 		</category>
 		<category id="advanced" label="10038" help="">

@@ -22,6 +22,7 @@ class Settings(object):
 
     def update_settings(self):
         addon = xbmcaddon.Addon()
+        self.datapath = addon.getAddonInfo('profile')
         self.enableservice = addon.getSettingBool('enableservice')
         self.enableservice_music = addon.getSettingBool('enableservice_music')
         self.progressdisplay = addon.getSettingInt('progress_display')
@@ -31,6 +32,7 @@ class Settings(object):
         self.savewith_basefilename_mvids = addon.getSettingBool('savewith_basefilename_mvids')
         self.cache_local_video_artwork = addon.getSettingBool('cache_local_video_artwork')
         self.cache_local_music_artwork = addon.getSettingBool('cache_local_music_artwork')
+        self.max_multiple_fanart = addon.getSettingInt('max_multiple_fanart')
 
         self.pathexclusion = []
         for index in range(10):

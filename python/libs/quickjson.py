@@ -166,6 +166,19 @@ def remove_texture_byurl(url):
     for texture in textures:
         remove_texture(texture['textureid'])
 
+def get_available_art(dbid, mediatype, arttype=None):
+    lb = 'VideoLibrary' if mediatype not in mediatypes.audiotypes else 'AudioLibrary'
+    json_request = get_base_json_request(lb + '.GetAvailableArt')
+    json_request['params']['item'] = {mediatype + 'id': dbid}
+    if arttype is not None:
+        json_request['params']['arttype'] = arttype
+
+    json_result = pykodi.execute_jsonrpc(json_request)
+    if check_json_result(json_result, 'availableart', json_request):
+        return json_result['result']['availableart']
+    else:
+        return []
+
 def get_base_json_request(method):
     return {'jsonrpc': '2.0', 'method': method, 'params': {}, 'id': 1}
 

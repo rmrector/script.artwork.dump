@@ -48,9 +48,13 @@ _togenerate = dict((mediatype, False) for mediatype in (MOVIE, EPISODE, MUSICVID
 
 _download_all = list(_default_mediatypes.keys())
 _managed_mediatypes = list(_default_mediatypes.keys())
+_multiplefanart_mediatypes = list(_default_mediatypes.keys())
 
 def disabled(mediatype):
     return mediatype not in _managed_mediatypes
+
+def add_multipleart(mediatype):
+    return mediatype in _multiplefanart_mediatypes
 
 def downloadartwork(mediatype, arttype):
     if mediatype in _download_all:
@@ -69,6 +73,8 @@ def generatethumb(mediatype):
 def update_settings():
     global _managed_mediatypes
     _managed_mediatypes = _get_setting_list('managed_mediatypes')
+    global _multiplefanart_mediatypes
+    _multiplefanart_mediatypes = _get_setting_list('multiple_fanart_mediatypes')
 
     for mtype in _togenerate:
         _togenerate[mtype] = addon.getSettingBool(mtype + '.thumb_generate')
