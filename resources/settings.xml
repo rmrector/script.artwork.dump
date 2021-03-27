@@ -296,7 +296,7 @@
 					<default>false</default>
 					<control type="toggle"/>
 				</setting>
-				<setting id="togglecontextoff" type="action" label="32413" help="">
+				<setting id="togglecontexton" type="action" label="32413" help="">
 					<level>0</level>
 					<data>Skin.ToggleSetting(enablecontext:script.artwork.dump)</data>
 					<constraints>
@@ -309,7 +309,7 @@
 					</dependencies>
 					<control type="button" format="action"/>
 				</setting>
-				<setting id="togglecontexton" type="action" label="32412" help="">
+				<setting id="togglecontextoff" type="action" label="32412" help="">
 					<level>0</level>
 					<data>Skin.ToggleSetting(enablecontext:script.artwork.dump)</data>
 					<constraints>
