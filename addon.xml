@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.artwork.dump" name="Artwork Dump" version="0.2.1~adev" provider-name="rmrector">
+<addon id="script.artwork.dump" name="Artwork Dump" version="0.2.1" provider-name="rmrector">
 	<requires>
 		<import addon="xbmc.python" version="3.0.0" />
 		<import addon="xbmc.json" version="6.20.0" />
@@ -26,7 +26,11 @@
 	<extension point="xbmc.addon.metadata">
 		<summary lang="en_GB">Automatically download artwork for your media.</summary>
 		<description lang="en_GB">Artwork Dump automatically downloads artwork for media in your video and music libraries into your media file system. It only downloads artwork already added to your libraries.</description>
-		<news>v0.2.0 (2021-03-07)
+		<news>v0.2.1 (2021-03-26)
+- fix: finding album folders from disc folders
+- fix: context menu visibility for single items
+
+v0.2.0 (2021-03-07)
 - feature: action preload all artwork to texture cache
 - feature: option to add multiple fanart from scraper results
 - fix: more Kodi crashes with non-UTF8</news>
