@@ -185,7 +185,7 @@ def _identify_album_folders(mediaitem):
             discnum = next(s['disc'] for s in songs if os.path.dirname(s['file']) == folder)
             if discnum:
                 discs[discnum] = folder + utils.get_pathsep(folder)
-        commonpath = os.path.dirname(os.path.commonpath(folders))
+        commonpath = os.path.commonpath(folders)
         if commonpath:
             commonpath += utils.get_pathsep(commonpath)
         if commonpath or discs:
