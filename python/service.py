@@ -116,7 +116,7 @@ class ArtworkService(xbmc.Monitor):
                 self.signal = 'recentvideos'
         elif method == 'AudioLibrary.OnScanFinished':
             if settings.enableservice_music:
-                self.signal = 'music'
+                self.signal = 'newmusic'
 
     def run(self):
         while not self.really_waitforabort(5):
