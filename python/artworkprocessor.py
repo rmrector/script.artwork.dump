@@ -175,7 +175,7 @@ class ProgressDisplay(object):
         if not check_utf8(message):
             message = None
         if self.visible and self.display_full_progress:
-            percent = 100 if final_update else \
+            percent = 100 if final_update or not self.totalcount else \
                 self.currentcount * 100 // self.totalcount
             self.currentcount += 1
             self.progress.update(percent, heading, message)
