@@ -17,6 +17,7 @@ PROVIDER_ERROR_MESSAGE = 32024
 FILENAME_ENCODING_ERROR = 32040
 
 THROTTLE_TIME = 0.15
+MESSAGE_CLEAR_COUNT = 50
 
 class ArtworkProcessor(object):
     def __init__(self, monitor=None):
@@ -159,6 +160,7 @@ class ProgressDisplay(object):
         self.visible = False
         self.totalcount = 0
         self.currentcount = 0
+        self.lastmessagecount = 0
 
     def update_settings(self, display_full_progress: bool, display_final_notification: bool):
         self.display_full_progress = display_full_progress
@@ -178,6 +180,10 @@ class ProgressDisplay(object):
             percent = 100 if final_update or not self.totalcount else \
                 self.currentcount * 100 // self.totalcount
             self.currentcount += 1
+            if message:
+                self.lastmessagecount = self.currentcount
+            elif self.currentcount > self.lastmessagecount + MESSAGE_CLEAR_COUNT:
+                message = " "
             self.progress.update(percent, heading, message)
 
     def finalupdate(self, message: str):
