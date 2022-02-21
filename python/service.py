@@ -160,13 +160,18 @@ class ArtworkService(xbmc.Monitor):
         totalcount = sum(media_list[1] for media_list in media_lists)
 
         def flatten_to_mediaitems():
+            count = 0
             for medialist in media_lists:
                 for mediaitem in medialist[0]:
                     item = info.MediaItem(mediaitem)
-                    if not shouldinclude_fn or shouldinclude_fn(item.dbid, item.mediatype, item.label):
+                    yielditem = not shouldinclude_fn or shouldinclude_fn(item.dbid, item.mediatype, item.label)
+                    if count > 1000 or yielditem and count > 0:
+                        yield count
+                        count = 0
+                    if yielditem:
                         yield item
                     else:
-                        yield None
+                        count += 1
 
         result = self.processor.process_list_with_total(flatten_to_mediaitems(), totalcount)
         return result

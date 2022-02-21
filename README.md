@@ -29,6 +29,6 @@ Prefer this over exporting artwork with Kodi - this will download the original a
 exports images re-encoded to be optimized for GUI usage.
 
 Call it a trimmed-down version of Artwork Beef, it is intended to work in concert with Kodi 19's
-full support for extended artwork from scrapers and the file system. This combination doesn't support multiple fanart.
+full support for extended artwork from scrapers and the file system.
 
 [3]: https://kodi.wiki/view/Movie_artwork

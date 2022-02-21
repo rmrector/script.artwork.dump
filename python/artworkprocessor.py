@@ -17,7 +17,7 @@ PROVIDER_ERROR_MESSAGE = 32024
 FILENAME_ENCODING_ERROR = 32040
 
 THROTTLE_TIME = 0.15
-MESSAGE_CLEAR_COUNT = 50
+MESSAGE_CLEAR_COUNT = 200
 
 class ArtworkProcessor(object):
     def __init__(self, monitor=None):
@@ -80,7 +80,7 @@ class ArtworkProcessor(object):
         aborted = False
         for mediaitem in medialist:
             exclude = is_excluded(mediaitem)
-            self.progressdisplay.update_progress(mediaitem.label if not exclude else None)
+            self.progressdisplay.update_progress(mediaitem.label if not exclude else mediaitem)
             if exclude:
                 if self.monitor.abortRequested():
                     aborted = True
@@ -174,6 +174,9 @@ class ProgressDisplay(object):
             self.visible = True
 
     def update_progress(self, message: str, heading: str=None, final_update=False):
+        if isinstance(message, int):
+            self.currentcount += message - 1
+            message = None
         if not check_utf8(message):
             message = None
         if self.visible and self.display_full_progress:
@@ -225,7 +228,7 @@ def finalmessage(count):
     return L(ARTWORK_UPDATED_MESSAGE).format(count) if count else L(NO_ARTWORK_UPDATED_MESSAGE)
 
 def is_excluded(mediaitem):
-    if not mediaitem:
+    if isinstance(mediaitem, int):
         return True
     if mediaitem.file is None:
         return False

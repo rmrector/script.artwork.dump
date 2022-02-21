@@ -15,7 +15,7 @@ msgstr ""
 # Messages
 
 msgctxt "#32020"
-msgid "Processing artwork"
+msgid "Scanning"
 msgstr ""
 
 msgctxt "#32022"
@@ -113,7 +113,7 @@ msgid "Add additional 'fanart' from available scraper results for media types"
 msgstr ""
 
 msgctxt "#32900"
-msgid "Add artwork for new videos after library updates"
+msgid "Scan for artwork updates to the video library after library updates"
 msgstr ""
 
 msgctxt "#32914"
@@ -129,7 +129,7 @@ msgid "Replace music video 'thumb' with Kodi generated thumb"
 msgstr ""
 
 msgctxt "#32922"
-msgid "Add artwork for new music after library updates"
+msgid "Scan for artwork updates to the music library after library updates"
 msgstr ""
 
 msgctxt "#32924"
