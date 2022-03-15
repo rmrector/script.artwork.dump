@@ -1,5 +1,7 @@
 import os
 import re
+from typing import Iterable, Union
+from python.libs.mediainfo import MediaItem
 import xbmc
 import xbmcgui
 
@@ -75,13 +77,12 @@ class ArtworkProcessor(object):
 
         return not aborted
 
-    def _process_list(self, medialist):
+    def _process_list(self, medialist: Iterable[Union[MediaItem, int]]):
         artcount = 0
         aborted = False
         for mediaitem in medialist:
-            exclude = is_excluded(mediaitem)
-            self.progressdisplay.update_progress(mediaitem.label if not exclude else mediaitem)
-            if exclude:
+            self.progressdisplay.update_progress(mediaitem if isinstance(mediaitem, int) else mediaitem.label)
+            if is_excluded(mediaitem):
                 if self.monitor.abortRequested():
                     aborted = True
                     break
