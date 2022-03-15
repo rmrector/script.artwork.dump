@@ -170,6 +170,7 @@
 					<default></default>
 					<constraints>
 						<options>
+							<option>thumb</option>
 							<option>banner</option>
 							<option>clearart</option>
 							<option>clearlogo</option>
@@ -193,6 +194,7 @@
 					<default></default>
 					<constraints>
 						<options>
+							<option>thumb</option>
 							<option>discart</option>
 							<option>back</option>
 							<option>spine</option>
@@ -212,7 +214,7 @@
 						<addbuttonlabel>13516</addbuttonlabel>
 					</control>
 				</setting>
-				<setting id="songart_downloadlist" type="list[string]" parent="music_download_level" label="39133" help="39134">
+				<setting id="songart_downloadlist" type="list[string]" parent="music_download_level" label="32702" help="32703">
 					<level>0</level>
 					<default></default>
 					<constraints>

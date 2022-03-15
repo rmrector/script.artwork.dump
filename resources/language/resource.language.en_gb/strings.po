@@ -112,6 +112,14 @@ msgctxt "#32701"
 msgid "Add additional 'fanart' from available scraper results for media types"
 msgstr ""
 
+msgctxt "#32702"
+msgid "Song art types whitelist"
+msgstr ""
+
+msgctxt "#32703"
+msgid "Limit the song artwork fetched locally or applied from scraper remote art results to just those art types in the whitelist"
+msgstr ""
+
 msgctxt "#32900"
 msgid "Scan for artwork updates to the video library after library updates"
 msgstr ""
