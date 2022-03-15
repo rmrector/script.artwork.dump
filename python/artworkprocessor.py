@@ -78,6 +78,7 @@ class ArtworkProcessor(object):
         return not aborted
 
     def _process_list(self, medialist: Iterable[Union[MediaItem, int]]):
+        log("Start processing list")
         artcount = 0
         aborted = False
         for mediaitem in medialist:
@@ -109,6 +110,8 @@ class ArtworkProcessor(object):
             elif self.monitor.waitForAbort(THROTTLE_TIME):
                 aborted = True
                 break
+
+        log("Finished processing list")
         return aborted, artcount
 
     def _process_item(self, mediaitem):
@@ -119,6 +122,7 @@ class ArtworkProcessor(object):
                 not mediaitem.art.get('thumb', '').startswith(thumbnailimages):
             newthumb = info.build_video_thumbnail_path(mediaitem.file)
             if newthumb:
+                log("Setting thumbnail to 'kodi generated'")
                 mediaitem.updatedart['thumb'] = newthumb
                 if 'thumb' in mediaitem.art:
                     del mediaitem.art['thumb']
@@ -126,6 +130,8 @@ class ArtworkProcessor(object):
         services_hit, error = self.downloader.downloadfor(mediaitem)
         if mediaitem.updatedart:
             add_art_to_library(mediatype, mediaitem.dbid, mediaitem.updatedart)
+        else:
+            log("No updates to artwork")
         self.cachelocal(mediaitem, mediaitem.updatedart)
 
         if error:

@@ -164,6 +164,7 @@ def remove_texture(textureid):
 def remove_texture_byurl(url):
     textures = get_textures(url)
     for texture in textures:
+        log("Removing texture from DB - {0}\n{1}".format(texture['textureid'], texture['url']))
         remove_texture(texture['textureid'])
 
 def get_available_art(dbid, mediatype, arttype=None):
