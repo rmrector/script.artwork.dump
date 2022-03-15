@@ -88,6 +88,8 @@ def log(message, level=xbmc.LOGDEBUG, tag=None):
     xbmc.log(file_message, level)
 
 def check_utf8(string):
+    '''Check for a valid UTF-8 string, as Kodi can still hand out non-UTF-8 strings that cause it to
+    crash when passed back to Kodi.'''
     if not string:
         return True
     try:

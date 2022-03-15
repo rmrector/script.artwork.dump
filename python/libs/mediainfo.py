@@ -93,8 +93,8 @@ def get_own_artwork(jsondata):
 def _get_multiple_fanart(existingart, dbid, mediatype):
     if settings.max_multiple_fanart == 0:
         return existingart
-    maxcount = _get_max_assigned_fanart(existingart)
-    if maxcount >= 1 or maxcount >= settings.max_multiple_fanart:
+    maxindex = _get_max_assigned_fanart(existingart)
+    if maxindex >= 1 or maxindex >= settings.max_multiple_fanart:
         return existingart
 
     existing_fanarturls = set(url for arttype, url in existingart.items() if split_arttype(arttype)[0] == 'fanart')
@@ -106,13 +106,13 @@ def _get_multiple_fanart(existingart, dbid, mediatype):
             if url not in existing_fanarturls and url not in toadd_urls:
                 toadd_urls.append(url)
 
-        counter = maxcount + 1
-        for newurl in toadd_urls[counter:]:
+        counter = maxindex + 1
+        for newurl in toadd_urls:
             if counter > settings.max_multiple_fanart:
                 break
             key = 'fanart' + (str(counter) if counter else '')
             existingart[key] = newurl
-            log("adding " + newurl + " as " + key)
+            log("adding extra fanart: " + newurl + " as " + key)
             counter += 1
     except JSONException as ex:
         log("Can't get multiple fanart for item, Kodi 19.0 final version or later required\n" + str(ex))
@@ -121,13 +121,13 @@ def _get_multiple_fanart(existingart, dbid, mediatype):
     return existingart
 
 def _get_max_assigned_fanart(existingart):
-    maxcount = -1
+    maxindex = -1
     for arttype in existingart:
         basetype, idx = split_arttype(arttype)
         if basetype == "fanart":
-            maxcount = max(idx, maxcount)
+            maxindex = max(idx, maxindex)
 
-    return maxcount
+    return maxindex
 
 def _remove_bad_icon(artwork_dict):
     if 'icon' not in artwork_dict:

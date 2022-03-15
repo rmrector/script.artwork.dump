@@ -180,7 +180,7 @@ class ProgressDisplay(object):
             self.progress.create("Artwork Dump: " + L(ADDING_ARTWORK_MESSAGE), "")
             self.visible = True
 
-    def update_progress(self, message: str, heading: str=None, final_update=False):
+    def update_progress(self, message: Union[str, int], heading: str=None, final_update=False):
         if isinstance(message, int):
             self.currentcount += message - 1
             message = None

@@ -107,7 +107,7 @@ class Database(object):
             self._build_settings()
             return -1
 
-        return int(self._get_setting_value('database version', 0))
+        return int(self._get_setting_value('database version', -1))
 
     def _get_setting_value(self, settingname, default=None):
         result = self.fetchone("SELECT value FROM {0} WHERE name=?".format(SETTINGS_TABLE), (settingname,))
