@@ -1,7 +1,6 @@
 import os
 import re
 from typing import Iterable, Union
-from python.libs.mediainfo import MediaItem
 import xbmc
 import xbmcgui
 
@@ -77,7 +76,7 @@ class ArtworkProcessor(object):
 
         return not aborted
 
-    def _process_list(self, medialist: Iterable[Union[MediaItem, int]]):
+    def _process_list(self, medialist: Iterable[Union[info.MediaItem, int]]):
         log("Start processing list")
         artcount = 0
         aborted = False
