@@ -25,7 +25,7 @@ moviestacking = [re.compile(r'(.*?)([ _.-]*(?:cd|dvd|p(?:ar)?t|dis[ck])[ _.-]*[0
     re.compile(r'(.*?)([ _.-]*(?:cd|dvd|p(?:ar)?t|dis[ck])[ _.-]*[a-d])(.*?)(\.[^.]+)$', re.IGNORECASE),
     re.compile(r'(.*?)([ ._-]*[a-d])(.*?)(\.[^.]+)$', re.IGNORECASE)
 ]
-def get_movie_path_list(stackedpath):
+def _get_movie_path_list(stackedpath):
     """Returns a list of filenames that can be used to find a movie's supporting files.
     The list includes the common base of all provided parts for stacked movies,
     and the parent directory of VIDEO_TS/BDMV. If neither applies, returns a list of one item,
@@ -64,8 +64,15 @@ def get_movie_path_list(stackedpath):
         if not result:
             log("Couldn't get an unstacked path from \"{0}\"".format(stackedpath), xbmc.LOGWARNING)
             result = [firstpath]
-    if parent_dir(result[0]) in ('VIDEO_TS', 'BDMV'):
-        result.append(dirname(dirname(result[0])) + get_pathsep(result[0]) + basename(result[0]))
+    return result
+
+def get_movie_thumb_path(stackedpath):
+    return _get_movie_path_list(stackedpath)[0]
+
+def get_movie_artwork_path(stackedpath):
+    result = _get_movie_path_list(stackedpath)[0]
+    if parent_dir(result) in ('VIDEO_TS', 'BDMV'):
+        return dirname(dirname(result)) + get_pathsep(result)
     return result
 
 def path_component(string):

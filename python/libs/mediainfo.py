@@ -149,7 +149,7 @@ def remove_local_from_texturecache(urls, include_generated=False):
 def build_video_thumbnail_path(videofile_path):
     if videofile_path.startswith('image://'):
         return videofile_path
-    path = utils.get_movie_path_list(videofile_path)[0]
+    path = utils.get_movie_thumb_path(videofile_path)
     if path.endswith('.iso'):
         return None
     # Kodi goes lowercase and doesn't encode some chars
@@ -234,7 +234,7 @@ def can_saveartwork(mediaitem):
             return True
     if not mediaitem.file:
         return False
-    path = utils.get_movie_path_list(mediaitem.file)[0] \
+    path = utils.get_movie_artwork_path(mediaitem.file) \
         if mediaitem.mediatype == mediatypes.MOVIE else mediaitem.file
     if path.startswith(blacklisted_protocols) or mediaitem.borked_filename:
         return False
@@ -248,7 +248,7 @@ def build_artwork_basepath(mediaitem, arttype):
     if not path:
         if not mediaitem.file:
             return ''
-        path = utils.get_movie_path_list(mediaitem.file)[0] \
+        path = utils.get_movie_artwork_path(mediaitem.file) \
             if mediaitem.mediatype == mediatypes.MOVIE else mediaitem.file
         if path.startswith(blacklisted_protocols):
             return ''
@@ -260,7 +260,7 @@ def build_artwork_basepath(mediaitem, arttype):
     use_basefilename = mediaitem.mediatype in (mediatypes.EPISODE, mediatypes.SONG) \
         or mediaitem.mediatype == mediatypes.MOVIE and settings.savewith_basefilename \
         or mediaitem.mediatype == mediatypes.MUSICVIDEO and settings.savewith_basefilename_mvids
-    if use_basefilename:
+    if basename and use_basefilename:
         path += basename + '-'
     def snum(num):
         return '-specials' if num == 0 else '-all' if num == -1 else '{0:02d}'.format(num)
