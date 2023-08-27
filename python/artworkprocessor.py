@@ -118,7 +118,7 @@ class ArtworkProcessor(object):
         mediatype = mediaitem.mediatype
 
         if mediatypes.generatethumb(mediaitem.mediatype) and \
-                not mediaitem.art.get('thumb', '').startswith(thumbnailimages):
+                mediaitem.art.get('thumb', '').startswith('http'):
             newthumb = info.build_video_thumbnail_path(mediaitem.file)
             if newthumb:
                 log("Setting thumbnail to 'kodi generated'")

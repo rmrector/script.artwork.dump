@@ -125,15 +125,15 @@ msgid "Scan for artwork updates to the video library after library updates"
 msgstr ""
 
 msgctxt "#32914"
-msgid "Replace episode 'thumb' with Kodi generated thumb"
+msgid "Replace remote episode 'thumb' with Kodi generated thumb"
 msgstr ""
 
 msgctxt "#32915"
-msgid "Replace movie 'thumb' with Kodi generated thumb"
+msgid "Replace remote movie 'thumb' with Kodi generated thumb"
 msgstr ""
 
 msgctxt "#32920"
-msgid "Replace music video 'thumb' with Kodi generated thumb"
+msgid "Replace remote music video 'thumb' with Kodi generated thumb"
 msgstr ""
 
 msgctxt "#32922"
