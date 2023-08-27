@@ -56,7 +56,7 @@ def main():
 
 def cache_artwork(librarytype='videos'):
     fileman = FileManager(True)
-    if not fileman.imagecachebase:
+    if fileman.use_http_cache and not fileman.imagecachebase:
         xbmcgui.Dialog().notification("Artwork Dump", L(M.REMOTE_CONTROL_REQUIRED),
             xbmcgui.NOTIFICATION_WARNING)
         return

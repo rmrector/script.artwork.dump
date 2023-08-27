@@ -29,7 +29,10 @@ class FileManager(object):
         self.fileerror_count = 0
         self.provider_errors = {}
         self.alreadycached = None if not bigcache else set()
-        self._build_imagecachebase()
+        self.use_http_cache = False
+
+        if self.use_http_cache:
+            self._build_imagecachebase()
 
     def _build_imagecachebase(self):
         result = pykodi.execute_jsonrpc({"jsonrpc": "2.0", "id": 1, "method": "Settings.GetSettings",
@@ -135,7 +138,7 @@ class FileManager(object):
             self.alreadycached = set()
 
     def cachefor(self, artmap, multiplethreads=False):
-        if not self.imagecachebase:
+        if self.use_http_cache and not self.imagecachebase:
             return 0
         urls = [url for url in artmap.values() if url and not url.startswith(('http', 'image'))]
         if not urls:
@@ -148,29 +151,35 @@ class FileManager(object):
         else:
             alreadycached = set(pykodi.unquoteimage(texture['url']) for texture in quickjson.get_textures(urls))
         count = [0]
-        def worker(path):
-            try:
-                res = self.getter(self.imagecachebase + urlparse.quote(pykodi.quoteimage(path), ''),
-                    stream=True, timeout=1)
-                if res:
-                    res.iter_content(chunk_size=1024)
-                    res.close()
-                    count[0] += 1
-            except GetterError:
-                pass
         threads = []
         for path in urls:
             if path in alreadycached:
                 continue
+            worker = self.http_worker if self.use_http_cache else self.vfs_worker
             if multiplethreads:
-                t = threading.Thread(target=worker, args=(path,))
+                t = threading.Thread(target=worker, args=(path, count))
                 threads.append(t)
                 t.start()
             else:
-                worker(path)
+                worker(path, count)
         for t in threads:
             t.join()
         return count[0]
+
+    def vfs_worker(self, path, count):
+        with xbmcvfs.File(pykodi.quoteimage(path)) as f:
+            count[0] += 1
+
+    def http_worker(self, path, count):
+        try:
+            res = self.getter(self.imagecachebase + urlparse.quote(pykodi.quoteimage(path), ''),
+                stream=True, timeout=1)
+            if res:
+                res.iter_content(chunk_size=1024)
+                res.close()
+                count[0] += 1
+        except GetterError:
+            pass
 
 def get_file_extension(contenttype, request_url, re_search=re.compile(r'\.\w*$')):
     if contenttype in typemap:
