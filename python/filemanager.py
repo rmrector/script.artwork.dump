@@ -87,6 +87,8 @@ class FileManager(object):
                 error = err
                 self.provider_errors[hostname] = self.provider_errors.get(hostname, 0) + 1
                 continue
+            else:
+                self.provider_errors[hostname] = 0
             if not result:
                 continue
             self.size += int(result.headers.get('content-length', 0))
