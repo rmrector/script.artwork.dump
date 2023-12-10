@@ -94,12 +94,16 @@ def _get_multiple_fanart(existingart, dbid, mediatype):
     if settings.max_multiple_fanart == 0:
         return existingart
     maxindex = _get_max_assigned_fanart(existingart)
-    if maxindex >= 1 or maxindex >= settings.max_multiple_fanart:
+    if maxindex >= 1:
+        # "multiple fanart" already managed for this item, don't guess and gather dupes
         return existingart
 
     existing_fanarturls = set(url for arttype, url in existingart.items() if split_arttype(arttype)[0] == 'fanart')
     try:
         availableart = quickjson.get_available_art(dbid, mediatype, 'fanart')
+        if len(availableart) <= maxindex + 1:
+            return existingart # if we already have more than available, assume these are dupes
+
         toadd_urls = []
         for art_option in availableart:
             url = unquoteimage(art_option['url'])
