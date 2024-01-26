@@ -180,6 +180,10 @@ msgctxt "#32953"
 msgid "Automatically preload local music library artwork to Kodi texture cache"
 msgstr ""
 
+msgctxt "#32954"
+msgid "Track processed items and skip them during later scans"
+msgstr ""
+
 msgctxt "#32976"
 msgid "Music library artwork types to download"
 msgstr ""

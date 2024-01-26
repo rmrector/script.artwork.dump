@@ -16,7 +16,7 @@ class ArtworkService(xbmc.Monitor):
         super(ArtworkService, self).__init__()
         self.abort = False
         self.processor = ArtworkProcessor(self)
-        self.processed = ProcessedItems()
+        self.processed = ProcessedItems(not settings.use_processeditems_database)
         self.recentvideos = {'movie': [], 'tvshow': [], 'episode': [], 'musicvideo': []}
         self.stoppeditems = set()
         self._signal = None

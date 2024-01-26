@@ -33,6 +33,7 @@ class Settings(object):
         self.cache_local_video_artwork = addon.getSettingBool('cache_local_video_artwork')
         self.cache_local_music_artwork = addon.getSettingBool('cache_local_music_artwork')
         self.max_multiple_fanart = addon.getSettingInt('max_multiple_fanart')
+        self.use_processeditems_database = addon.getSettingBool('use_processeditems_database')
 
         self.pathexclusion = []
         for index in range(10):

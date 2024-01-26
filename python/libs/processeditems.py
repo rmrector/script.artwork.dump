@@ -7,12 +7,16 @@ from .pykodi import check_utf8
 VERSION = 0
 
 class ProcessedItems(object):
-    def __init__(self):
+    def __init__(self, skipdb: bool):
+        self.skipdb = skipdb
         # data is last known season for TV shows
-        self.db = Database('processeditems', upgrade_processeditems)
+        if not self.skipdb:
+            self.db = Database('processeditems', upgrade_processeditems)
 
     def get_data(self, mediaid, mediatype, medialabel):
         if not check_utf8(medialabel):
+            return
+        if self.skipdb or self.db.error:
             return
         result = self.db.fetchone("""SELECT * FROM processeditems WHERE mediaid=? AND mediatype=?
             AND medialabel=?""", (mediaid, mediatype, medialabel))
@@ -22,6 +26,8 @@ class ProcessedItems(object):
     def set_data(self, mediaid, mediatype, medialabel, data):
         if not check_utf8(medialabel) or not check_utf8(data):
             return
+        if self.skipdb or self.db.error:
+            return
         exists = self._key_exists(mediaid, mediatype)
         script = "UPDATE processeditems SET data=?, medialabel=? WHERE mediaid=? AND mediatype=?" if exists \
             else "INSERT INTO processeditems (data, medialabel, mediaid, mediatype) VALUES (?, ?, ?, ?)"
@@ -29,7 +35,9 @@ class ProcessedItems(object):
 
     def exists(self, mediaid, mediatype, medialabel):
         if not check_utf8(medialabel):
-            return
+            return False
+        if self.skipdb or self.db.error:
+            return False
         return bool(self.db.fetchone("""SELECT * FROM processeditems WHERE mediaid=? AND mediatype=?
             AND medialabel=?""", (mediaid, mediatype, medialabel)))
 
@@ -69,6 +77,10 @@ class Database(object):
         self._conn.text_factory = str
         self._cursor = self._conn.cursor()
         self._setup(upgrade_fn)
+
+    @property
+    def error(self):
+        return not bool(self._conn)
 
     def execute(self, query, args=()):
         with self._conn:

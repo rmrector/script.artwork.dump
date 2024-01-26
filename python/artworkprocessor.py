@@ -24,7 +24,7 @@ class ArtworkProcessor(object):
     def __init__(self, monitor=None):
         self.monitor = monitor or xbmc.Monitor()
         self.downloader = None
-        self.processed = ProcessedItems()
+        self.processed = ProcessedItems(not settings.use_processeditems_database)
         self.progressdisplay = ProgressDisplay(
             self.monitor,
             settings.progressdisplay == PROGRESS_DISPLAY_FULLPROGRESS,
