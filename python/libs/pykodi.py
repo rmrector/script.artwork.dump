@@ -106,9 +106,10 @@ def check_utf8(string):
         return False
 
 def unquoteimage(imagestring):
-    # extracted thumbnail images need to keep their 'image://' encoding
-    if imagestring.startswith('image://') and not imagestring.startswith(('image://video', 'image://music')):
-        return urllib.parse.unquote(imagestring[8:-1])
+    # all but actual image files need to keep their 'image://' encoding
+    parsed = urllib.parse.urlparse(imagestring)
+    if parsed.scheme == 'image' and not parsed.username:
+        return urllib.parse.unquote(parsed.hostname)
     return imagestring
 
 ParsedImage = collections.namedtuple('ParsedImage', ['scheme', 'file', 'specialtype'])
