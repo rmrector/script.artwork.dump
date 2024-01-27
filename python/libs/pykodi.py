@@ -28,6 +28,13 @@ def get_main_addon():
         _main_addon = xbmcaddon.Addon()
     return _main_addon
 
+_kodiversion = None
+def get_kodi_version():
+    global _kodiversion
+    if _kodiversion is None:
+        _kodiversion = int(get_infolabel('System.BuildVersion').split('.')[0])
+    return _kodiversion
+
 def localize(messageid):
     if isinstance(messageid, str):
         result = messageid
@@ -103,6 +110,18 @@ def unquoteimage(imagestring):
     if imagestring.startswith('image://') and not imagestring.startswith(('image://video', 'image://music')):
         return urllib.parse.unquote(imagestring[8:-1])
     return imagestring
+
+ParsedImage = collections.namedtuple('ParsedImage', ['scheme', 'file', 'specialtype'])
+
+def parseimage(imagestring: str) -> ParsedImage:
+    if not imagestring.startswith('image://'):
+        return ParsedImage('image', imagestring, '')
+
+    result = urllib.parse.urlparse(imagestring)
+    return ParsedImage(
+        result.scheme,
+        urllib.parse.unquote(result.hostname),
+        result.username)
 
 def quoteimage(imagestring):
     if imagestring.startswith('image://'):

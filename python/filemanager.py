@@ -30,6 +30,10 @@ class FileManager(object):
         self.provider_errors = {}
         self.alreadycached = None if not bigcache else set()
         self.use_http_cache = False
+        self.can_precache_specialimages = pykodi.get_kodi_version() >= 21
+        self.extract_video_thumb = (
+            self.can_precache_specialimages and
+            bool(quickjson.get_settingvalue('myvideos.extractthumb')))
 
         if self.use_http_cache:
             self._build_imagecachebase()
@@ -142,13 +146,13 @@ class FileManager(object):
     def cachefor(self, artmap, multiplethreads=False):
         if self.use_http_cache and not self.imagecachebase:
             return 0
-        urls = [url for url in artmap.values() if url and not url.startswith(('http', 'image'))]
+        urls = [url for url in artmap.values() if url and self.can_cache_image(url)]
         if not urls:
             return 0
         if self.alreadycached is not None:
             if not self.alreadycached:
                 self.alreadycached = set(pykodi.unquoteimage(texture['url']) for texture in quickjson.get_textures()
-                    if not pykodi.unquoteimage(texture['url']).startswith(('http', 'image')))
+                    if not pykodi.unquoteimage(texture['url']).startswith('http'))
             alreadycached = self.alreadycached
         else:
             alreadycached = set(pykodi.unquoteimage(texture['url']) for texture in quickjson.get_textures(urls))
@@ -182,6 +186,16 @@ class FileManager(object):
                 count[0] += 1
         except GetterError:
             pass
+
+    def can_cache_image(self, texture_url: str) -> bool:
+        parsed = pykodi.parseimage(texture_url)
+        if parsed.scheme != 'image' or parsed.file.startswith('http'):
+            return False
+        if parsed.specialtype == 'video':
+            return self.extract_video_thumb
+        if parsed.specialtype:
+            return self.can_precache_specialimages
+        return True
 
 def get_file_extension(contenttype, request_url, re_search=re.compile(r'\.\w*$')):
     if contenttype in typemap:
