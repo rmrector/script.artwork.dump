@@ -161,7 +161,7 @@ def build_video_thumbnail_path(videofile_path):
     result = re.sub(r'%[0-9A-F]{2}', lambda mo: mo.group().lower(), result)
     return result
 
-def add_additional_iteminfo(mediaitem):
+def add_additional_iteminfo(mediaitem: MediaItem):
     '''Get more data from the Kodi library.'''
     if mediaitem.mediatype == mediatypes.SEASON:
         tvshow = get_cached_tvshow(mediaitem.tvshowid)

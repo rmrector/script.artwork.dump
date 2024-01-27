@@ -8,7 +8,7 @@ from filemanager import FileManager, FileError
 from libs import mediainfo as info, mediatypes, quickjson
 from libs.addonsettings import settings, PROGRESS_DISPLAY_FULLPROGRESS, PROGRESS_DISPLAY_NONE, EXCLUSION_PATH_TYPE_FOLDER, EXCLUSION_PATH_TYPE_PREFIX, EXCLUSION_PATH_TYPE_REGEX
 from libs.processeditems import ProcessedItems
-from libs.pykodi import localize as L, log, get_conditional, thumbnailimages, check_utf8
+from libs.pykodi import localize as L, log, get_conditional, check_utf8
 from libs.quickjson import JSONException
 
 ADDING_ARTWORK_MESSAGE = 32020
@@ -113,7 +113,7 @@ class ArtworkProcessor(object):
         log("Finished processing list")
         return aborted, artcount
 
-    def _process_item(self, mediaitem):
+    def _process_item(self, mediaitem: info.MediaItem):
         log("Processing {0} '{1}' automatically.".format(mediaitem.mediatype, mediaitem.label))
         mediatype = mediaitem.mediatype
 

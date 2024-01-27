@@ -2,7 +2,7 @@
 
 Artwork Dump is an add-on for Kodi that downloads artwork for media in your video and music libraries
 into your media file system. It only downloads artwork already added to your libraries by scrapers,
-NFO files, or other add-ons. Kodi 19 Matrix only.
+NFO files, or other add-ons. For Kodi 19 Matrix and newer versions.
 
 ## Usage
 
