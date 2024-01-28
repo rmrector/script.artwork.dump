@@ -244,7 +244,7 @@
 				</setting>
 				<setting id="multiple_fanart_mediatypes" type="list[string]" label="32701" help="32001">
 					<level>0</level>
-					<default>tvshow, season, movie, set, musicvideo, artist, album</default>
+					<default>tvshow, movie, set, musicvideo, artist, album</default>
 					<constraints>
 						<options>
 							<option>movie</option>
