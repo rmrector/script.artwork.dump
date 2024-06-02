@@ -120,6 +120,23 @@ msgctxt "#32703"
 msgid "Limit the song artwork fetched locally or applied from scraper remote art results to just those art types in the whitelist"
 msgstr ""
 
+msgctxt "#32704"
+msgid "Action when library artwork is remote URL and local file exists"
+msgstr ""
+
+msgctxt "#32705"
+msgid "Keep remote URL"
+msgstr ""
+
+msgctxt "#32706"
+msgid "Overwrite local file"
+msgstr ""
+
+msgctxt "#32707"
+msgid "Use existing file"
+msgstr ""
+
+
 msgctxt "#32900"
 msgid "Scan for artwork updates to the video library after library updates"
 msgstr ""
@@ -158,10 +175,6 @@ msgstr ""
 
 msgctxt "#32928"
 msgid "Show final artwork update count as a notification"
-msgstr ""
-
-msgctxt "#32931"
-msgid "Overwrite existing artwork files"
 msgstr ""
 
 msgctxt "#32941"

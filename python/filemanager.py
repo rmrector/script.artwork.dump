@@ -7,7 +7,7 @@ import xbmcvfs
 from contextlib import closing
 
 from libs import mediainfo as info, mediatypes, pykodi, quickjson
-from libs.addonsettings import settings
+from libs.addonsettings import settings, EXISTING_FILE_IGNORE, EXISTING_FILE_OVERWRITE, EXISTING_FILE_USE_EXISTING
 from libs.pykodi import localize as L, log
 from libs.webhelper import Getter, GetterError
 
@@ -86,6 +86,22 @@ class FileManager(object):
             full_basefilepath = info.build_artwork_basepath(mediaitem, arttype)
             if not full_basefilepath:
                 continue
+            test_basefilepath = full_basefilepath + '.' + get_test_extension(url)
+            if xbmcvfs.exists(test_basefilepath):
+                message = "Overwriting existing file '{0}' due to configuration" \
+                        if settings.handle_existing_files == EXISTING_FILE_OVERWRITE \
+                    else "Using existing file '{0}' due to configuration" \
+                        if settings.handle_existing_files == EXISTING_FILE_USE_EXISTING \
+                    else "Not overwriting existing file '{0}' due to configuration"
+                log(message.format(test_basefilepath), xbmc.LOGINFO)
+                if settings.handle_existing_files == EXISTING_FILE_IGNORE:
+                    continue
+                if settings.handle_existing_files == EXISTING_FILE_USE_EXISTING:
+                    mediaitem.updatedart[arttype] = test_basefilepath
+                    continue
+            else:
+                log("Kodi says this file does not exist\n" + test_basefilepath)
+
             result, err = self.doget(url)
             if err:
                 error = err
@@ -102,14 +118,6 @@ class FileManager(object):
                 log("Can't determine extension for '{0}'\nfor image type '{1}'".format(url, arttype))
                 continue
             full_basefilepath += '.' + ext
-            if xbmcvfs.exists(full_basefilepath):
-                message = "Overwriting existing file '{0}' due to configuration" if settings.overwrite_existing \
-                    else "Not overwriting existing file '{0}' due to configuration"
-                log(message.format(full_basefilepath), xbmc.LOGINFO)
-                if not settings.overwrite_existing:
-                    continue
-            else:
-                log("Kodi says this file does not exist\n" + full_basefilepath)
             folder = os.path.dirname(full_basefilepath)
             if not xbmcvfs.exists(folder):
                 xbmcvfs.mkdirs(folder)
@@ -197,11 +205,17 @@ class FileManager(object):
             return self.can_precache_specialimages
         return True
 
+def get_test_extension(request_url, re_search=re.compile(r'\.\w*$')):
+    if re.search(re_search, request_url):
+        return request_url.rsplit('.', 1)[1]
+    return 'jpg'
+
 def get_file_extension(contenttype, request_url, re_search=re.compile(r'\.\w*$')):
     if contenttype in typemap:
         return typemap[contenttype]
     if re.search(re_search, request_url):
         return request_url.rsplit('.', 1)[1]
+    return None
 
 def get_downloadable_art(mediaitem):
     downloadable = dict(mediaitem.art)

@@ -13,10 +13,17 @@
 					<default>false</default>
 					<control type="toggle"/>
 				</setting>
-				<setting id="overwrite_existing" type="boolean" label="32931" help="">
+				<setting id="handle_existing_files" type="integer" label="32704" help="">
 					<level>0</level>
-					<default>false</default>
-					<control type="toggle"/>
+					<default>2</default>
+					<constraints>
+						<options>
+							<option label="32705">0</option> <!-- Keep remote URL -->
+							<option label="32706">1</option> <!-- Overwrite local file -->
+							<option label="32707">2</option> <!-- Use existing file -->
+						</options>
+					</constraints>
+					<control type="list" format="string" />
 				</setting>
 				<setting id="managed_mediatypes" type="list[string]" label="32000" help="32001">
 					<level>0</level>

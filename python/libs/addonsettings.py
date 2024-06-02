@@ -11,6 +11,10 @@ EXCLUSION_PATH_TYPE_FOLDER = 0
 EXCLUSION_PATH_TYPE_PREFIX = 1
 EXCLUSION_PATH_TYPE_REGEX = 2
 
+EXISTING_FILE_IGNORE = 0
+EXISTING_FILE_OVERWRITE = 1
+EXISTING_FILE_USE_EXISTING = 2
+
 class Settings(object):
     def __init__(self):
         self.update_settings()
@@ -27,7 +31,7 @@ class Settings(object):
         self.enableservice_music = addon.getSettingBool('enableservice_music')
         self.progressdisplay = addon.getSettingInt('progress_display')
         self.final_notification = addon.getSettingBool('final_notification')
-        self.overwrite_existing = addon.getSettingBool('overwrite_existing')
+        self.handle_existing_files = addon.getSettingInt('handle_existing_files')
         self.savewith_basefilename = addon.getSettingBool('savewith_basefilename')
         self.savewith_basefilename_mvids = addon.getSettingBool('savewith_basefilename_mvids')
         self.cache_local_video_artwork = addon.getSettingBool('cache_local_video_artwork')
