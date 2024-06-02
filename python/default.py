@@ -61,7 +61,7 @@ def cache_artwork(librarytype='videos'):
             xbmcgui.NOTIFICATION_WARNING)
         return
     heading = L(M.CACHE_VIDEO_ARTWORK if librarytype == 'videos' else M.CACHE_MUSIC_ARTWORK)
-    cached = runon_medialist(lambda mi: fileman.cachefor(mi.art, False), heading, librarytype, fg=False)
+    cached = runon_medialist(lambda mi: fileman.cachefor(mi.art), heading, librarytype, fg=False)
     xbmcgui.Dialog().ok("Artwork Dump", L(M.CACHED_COUNT).format(cached))
 
 def runon_medialist(function, heading, medialist='videos', typelabel=None, fg=False):

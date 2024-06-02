@@ -1,6 +1,5 @@
 import os
 import re
-import threading
 import urllib.parse as urlparse
 import xbmc
 import xbmcvfs
@@ -29,45 +28,10 @@ class FileManager(object):
         self.fileerror_count = 0
         self.provider_errors = {}
         self.alreadycached = None if not bigcache else set()
-        self.use_http_cache = False
         self.can_precache_specialimages = pykodi.get_kodi_version() >= 21
         self.extract_video_thumb = (
             self.can_precache_specialimages and
             bool(quickjson.get_settingvalue('myvideos.extractthumb')))
-
-        if self.use_http_cache:
-            self._build_imagecachebase()
-
-    def _build_imagecachebase(self):
-        result = pykodi.execute_jsonrpc({"jsonrpc": "2.0", "id": 1, "method": "Settings.GetSettings",
-            "params": {"filter": {"category": "control", "section": "services"}}})
-        port = 80
-        username = ''
-        password = ''
-        secure = False
-        server_enabled = True
-        if result.get('result', {}).get('settings'):
-            for setting in result['result']['settings']:
-                if setting['id'] == 'services.webserver' and not setting['value']:
-                    server_enabled = False
-                    break
-                if setting['id'] == 'services.webserverusername':
-                    username = setting['value']
-                elif setting['id'] == 'services.webserverport':
-                    port = setting['value']
-                elif setting['id'] == 'services.webserverpassword':
-                    password = setting['value']
-                elif setting['id'] == 'services.webserverssl' and setting['value']:
-                    secure = True
-            username = '{0}:{1}@'.format(username, password) if username and password else ''
-        else:
-            server_enabled = False
-        if server_enabled:
-            protocol = 'https' if secure else 'http'
-            self.imagecachebase = '{0}://{1}localhost:{2}/image/'.format(protocol, username, port)
-        else:
-            self.imagecachebase = None
-            log(L(REMOTE_CONTROL_REQUIRED), xbmc.LOGWARNING)
 
     def downloadfor(self, mediaitem):
         if self.fileerror_count >= FILEERROR_LIMIT:
@@ -151,9 +115,7 @@ class FileManager(object):
         if self.alreadycached is None:
             self.alreadycached = set()
 
-    def cachefor(self, artmap, multiplethreads=False):
-        if self.use_http_cache and not self.imagecachebase:
-            return 0
+    def cachefor(self, artmap):
         urls = [url for url in artmap.values() if url and self.can_cache_image(url)]
         if not urls:
             return 0
@@ -165,35 +127,15 @@ class FileManager(object):
         else:
             alreadycached = set(pykodi.unquoteimage(texture['url']) for texture in quickjson.get_textures(urls))
         count = [0]
-        threads = []
         for path in urls:
             if path in alreadycached:
                 continue
-            worker = self.http_worker if self.use_http_cache else self.vfs_worker
-            if multiplethreads:
-                t = threading.Thread(target=worker, args=(path, count))
-                threads.append(t)
-                t.start()
-            else:
-                worker(path, count)
-        for t in threads:
-            t.join()
+            self.vfs_worker(path, count)
         return count[0]
 
     def vfs_worker(self, path, count):
         with xbmcvfs.File(pykodi.quoteimage(path)) as f:
             count[0] += 1
-
-    def http_worker(self, path, count):
-        try:
-            res = self.getter(self.imagecachebase + urlparse.quote(pykodi.quoteimage(path), ''),
-                stream=True, timeout=1)
-            if res:
-                res.iter_content(chunk_size=1024)
-                res.close()
-                count[0] += 1
-        except GetterError:
-            pass
 
     def can_cache_image(self, texture_url: str) -> bool:
         parsed = pykodi.parseimage(texture_url)
