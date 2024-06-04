@@ -249,7 +249,7 @@
 						<popup>false</popup>
 					</control>
 				</setting>
-				<setting id="multiple_fanart_mediatypes" type="list[string]" label="32701" help="32001">
+				<setting id="multiple_fanart_mediatypes" type="list[string]" parent="max_multiple_fanart" label="32701" help="32001">
 					<level>0</level>
 					<default>tvshow, movie, set, musicvideo, artist, album</default>
 					<constraints>
@@ -265,9 +265,11 @@
 						</options>
 						<delimiter>, </delimiter>
 					</constraints>
+					<!-- Kodi spams log about not being able to find this setting.
 					<dependencies>
 						<dependency type="visible" setting="max_multiple_fanart" operator="!is">0</dependency>
 					</dependencies>
+					-->
 					<control type="list" format="string">
 						<multiselect>true</multiselect>
 					</control>
