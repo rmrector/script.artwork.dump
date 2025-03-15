@@ -19,6 +19,7 @@ FILENAME_ENCODING_ERROR = 32040
 
 THROTTLE_TIME = 0.15
 MESSAGE_CLEAR_COUNT = 200
+PROGRESS_UPDATE_COUNT = 100
 
 class ArtworkProcessor(object):
     def __init__(self, monitor=None):
@@ -80,13 +81,22 @@ class ArtworkProcessor(object):
         log("Start processing list")
         artcount = 0
         aborted = False
+        progress_count = 0
         for mediaitem in medialist:
-            self.progressdisplay.update_progress(mediaitem if isinstance(mediaitem, int) else mediaitem.label)
+            if isinstance(mediaitem, int):
+                progress_count += mediaitem
+                if progress_count > PROGRESS_UPDATE_COUNT:
+                    self.progressdisplay.update_progress(None, progress_count)
+                    progress_count = 0
+            else:
+                progress_count += 1
+
             if is_excluded(mediaitem):
                 if self.monitor.abortRequested():
                     aborted = True
                     break
                 continue
+
             info.add_additional_iteminfo(mediaitem)
             try:
                 services_hit = self._process_item(mediaitem)
@@ -102,6 +112,11 @@ class ArtworkProcessor(object):
                 self.notify_warning(ex.message, None, True)
             artcount += len(mediaitem.updatedart)
 
+            if mediaitem.updatedart or progress_count > PROGRESS_UPDATE_COUNT:
+                msg = mediaitem.label if mediaitem.updatedart else None
+                self.progressdisplay.update_progress(msg, progress_count)
+                progress_count = 0
+
             if not services_hit:
                 if self.monitor.abortRequested():
                     aborted = True
@@ -109,6 +124,9 @@ class ArtworkProcessor(object):
             elif self.monitor.waitForAbort(THROTTLE_TIME):
                 aborted = True
                 break
+
+        if progress_count:
+            self.progressdisplay.update_progress(None, progress_count)
 
         log("Finished processing list")
         return aborted, artcount
@@ -179,21 +197,18 @@ class ProgressDisplay(object):
             self.progress.create("Artwork Dump: " + L(ADDING_ARTWORK_MESSAGE), "")
             self.visible = True
 
-    def update_progress(self, message: Union[str, int], heading: str=None, final_update=False):
-        if isinstance(message, int):
-            self.currentcount += message - 1
-            message = None
+    def update_progress(self, message: str, count: int=0, heading: str=None, final_update=False):
+        self.currentcount += count or 1
         if not check_utf8(message):
             message = None
         if self.visible and self.display_full_progress:
             percent = 100 if final_update or not self.totalcount else \
                 self.currentcount * 100 // self.totalcount
-            self.currentcount += 1
             if message:
                 self.lastmessagecount = self.currentcount
             elif self.currentcount > self.lastmessagecount + MESSAGE_CLEAR_COUNT:
                 message = " "
-            self.progress.update(percent, heading, message)
+            self.progress.update(min(100, percent), heading, message)
 
     def finalupdate(self, message: str):
         if self.display_final_notification:
