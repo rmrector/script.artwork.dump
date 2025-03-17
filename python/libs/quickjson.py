@@ -17,6 +17,8 @@ typemap = {mediatypes.MOVIE: ('Movie', ['art', 'imdbnumber', 'file', 'premiered'
     mediatypes.SONG: ('Song', ['art', 'musicbrainztrackid', 'musicbrainzalbumartistid', 'album',
         'albumartist', 'albumartistid', 'albumid', 'file', 'disc', 'artist', 'title'], None)}
 
+recent_filter = {'field': 'dateadded', 'operator': 'inthelast', 'value': '60'}
+
 def get_item_details(dbid, mediatype):
     assert mediatype in typemap
 
@@ -64,16 +66,26 @@ def _extract_result_list(json_result, mediatype):
     result = json_result['result'][mediatype + 's']
     return result
 
-def iter_item_list(mediatype):
-    first_and_count = _get_first_item_and_count(mediatype)
+def iter_new_item_list(mediatype):
+    first_and_count = _get_first_item_and_count(mediatype, True)
     if not first_and_count[0]:
         return (), 0
     first_item, totalcount = first_and_count
 
-    return _get_iter_with_first(mediatype, first_item), totalcount
+    return _get_iter_with_first(mediatype, True, first_item), totalcount
 
-def _get_first_item_and_count(mediatype):
+def iter_item_list(mediatype):
+    first_and_count = _get_first_item_and_count(mediatype, False)
+    if not first_and_count[0]:
+        return (), 0
+    first_item, totalcount = first_and_count
+
+    return _get_iter_with_first(mediatype, False, first_item), totalcount
+
+def _get_first_item_and_count(mediatype, only_recent):
     extraparams = {'limits': {'start': 0, 'end': 1}}
+    if only_recent:
+        extraparams['filter'] = recent_filter
     json_request, json_result = _inner_get_item_list(mediatype, extraparams)
     if not check_json_result(json_result, mediatype + 's', json_request):
         return None, 0
@@ -84,17 +96,19 @@ def _get_first_item_and_count(mediatype):
         return None, 0
     return itemlist[0], total
 
-def _get_iter_with_first(mediatype, first_item):
+def _get_iter_with_first(mediatype, only_recent, first_item):
     yield first_item
-    for item in _get_iter(mediatype):
+    for item in _get_iter(mediatype, only_recent):
         yield item
 
-def _get_iter(mediatype):
+def _get_iter(mediatype, only_recent):
     chunksize = 4000 if mediatype == mediatypes.EPISODE else 1000
     source_exhausted = False
     lastend = 1
     while not source_exhausted:
         extraparams = {'limits': {'start': lastend, 'end': lastend + chunksize}}
+        if only_recent:
+            extraparams['filter'] = recent_filter
 
         json_request, json_result = _inner_get_item_list(mediatype, extraparams)
         if not check_json_result(json_result, mediatype + 's', json_request):
@@ -107,6 +121,63 @@ def _get_iter(mediatype):
 
         for item in _extract_result_list(json_result, mediatype):
             yield item
+
+def iter_new_music_list(mediatype, start_date):
+    start_date = start_date.strftime('%Y-%m-%d %H:%M:%S')
+    first_and_count = _get_first_newmusic_and_count(mediatype, start_date)
+    if not first_and_count[0]:
+        return (), 0
+    first_item, totalcount = first_and_count
+
+    return _get_iter_newmusic_with_first(mediatype, start_date, first_item), totalcount
+
+def _get_first_newmusic_and_count(mediatype, start_date):
+    extraparams = {
+        'limits': {'start': 0, 'end': 1},
+        'filter': _recent_music_filter(start_date)
+    }
+    json_request, json_result = _inner_get_item_list(mediatype, extraparams)
+    if not check_json_result(json_result, mediatype + 's', json_request):
+        return None, 0
+
+    total = json_result['result']['limits']['total']
+    itemlist = _extract_result_list(json_result, mediatype)
+    if not itemlist:
+        return None, 0
+    return itemlist[0], total
+
+def _get_iter_newmusic_with_first(mediatype, start_date, first_item):
+    yield first_item
+    for item in _get_iter_newmusic(mediatype, start_date):
+        yield item
+
+def _get_iter_newmusic(mediatype, start_date):
+    chunksize = 4000 if mediatype == mediatypes.EPISODE else 1000
+    source_exhausted = False
+    lastend = 1
+    while not source_exhausted:
+        extraparams = {
+            'limits': {'start': lastend, 'end': lastend + chunksize},
+            'filter': _recent_music_filter(start_date)
+        }
+
+        json_request, json_result = _inner_get_item_list(mediatype, extraparams)
+        if not check_json_result(json_result, mediatype + 's', json_request):
+            break
+
+        total = json_result['result']['limits']['total']
+        if lastend + chunksize >= total:
+            source_exhausted = True
+        lastend = json_result['result']['limits']['end']
+
+        for item in _extract_result_list(json_result, mediatype):
+            yield item
+
+def _recent_music_filter(start_date):
+    return { 'or': [
+        {'field': 'datenew', 'operator': 'after', 'value': start_date},
+        {'field': 'datemodified', 'operator': 'after', 'value': start_date}
+    ]}
 
 def get_albums(artistname=None, dbid=None):
     if artistname is None or dbid is None:

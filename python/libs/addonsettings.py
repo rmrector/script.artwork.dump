@@ -15,6 +15,10 @@ EXISTING_FILE_IGNORE = 0
 EXISTING_FILE_OVERWRITE = 1
 EXISTING_FILE_USE_EXISTING = 2
 
+SCAN_NEW_ALL = 0
+SCAN_NEW_DAYS = 1
+SCAN_NEW_DATABASE = 2
+
 class Settings(object):
     def __init__(self):
         self.update_settings()
@@ -37,7 +41,9 @@ class Settings(object):
         self.cache_local_video_artwork = addon.getSettingBool('cache_local_video_artwork')
         self.cache_local_music_artwork = addon.getSettingBool('cache_local_music_artwork')
         self.max_multiple_fanart = addon.getSettingInt('max_multiple_fanart')
-        self.use_processeditems_database = addon.getSettingBool('use_processeditems_database')
+        self.determine_new_algo = addon.getSettingInt('determine_new_algo')
+        self.last_music_run = addon.getSettingString('last_music_run')
+        self.last_video_run = addon.getSettingString('last_video_run')
 
         self.pathexclusion = []
         for index in range(10):
@@ -49,5 +55,13 @@ class Settings(object):
                 prefix = addon.getSettingString('exclude.path.prefix_' + index_append)
                 regex = addon.getSettingString('exclude.path.regex_' + index_append)
                 self.pathexclusion.append({"type": exclusiontype, "folder": folder, "prefix": prefix, "regex": regex})
+
+    def set_last_video_run(self, last_run):
+        addon = xbmcaddon.Addon()
+        addon.setSetting('last_video_run', last_run)
+
+    def set_last_music_run(self, last_run):
+        addon = xbmcaddon.Addon()
+        addon.setSetting('last_music_run', last_run)
 
 settings = Settings()

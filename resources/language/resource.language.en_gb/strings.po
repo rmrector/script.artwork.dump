@@ -194,7 +194,19 @@ msgid "Automatically preload local music library artwork to Kodi texture cache"
 msgstr ""
 
 msgctxt "#32954"
-msgid "Track processed items and skip them during later scans"
+msgid "How to determine 'new' videos to scan"
+msgstr ""
+
+msgctxt "#32955"
+msgid "Scan all videos"
+msgstr ""
+
+msgctxt "#32956"
+msgid "Scan videos added in last 60 days"
+msgstr ""
+
+msgctxt "#32957"
+msgid "Track processed videos in DB"
 msgstr ""
 
 msgctxt "#32976"

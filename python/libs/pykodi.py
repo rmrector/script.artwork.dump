@@ -53,12 +53,12 @@ def get_infolabel(infolabel):
 def execute_builtin(builtin_command):
     xbmc.executebuiltin(builtin_command)
 
-def datetime_now():
+def datetime_now(tzinfo=None):
     try:
-        return datetime.now()
+        return datetime.now(tzinfo)
     except ImportError:
         xbmc.sleep(50)
-        return datetime_now()
+        return datetime_now(tzinfo)
 
 def datetime_strptime(date_string, format_string):
     try:

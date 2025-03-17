@@ -1,9 +1,10 @@
 import json
 import xbmc
+from datetime import datetime, timedelta, timezone
 
 from artworkprocessor import ArtworkProcessor
 from libs import mediainfo as info, mediatypes, pykodi, quickjson
-from libs.addonsettings import settings
+from libs.addonsettings import settings, SCAN_NEW_DATABASE, SCAN_NEW_DAYS
 from libs.processeditems import ProcessedItems
 from libs.pykodi import log
 
@@ -16,7 +17,7 @@ class ArtworkService(xbmc.Monitor):
         super(ArtworkService, self).__init__()
         self.abort = False
         self.processor = ArtworkProcessor(self)
-        self.processed = ProcessedItems(not settings.use_processeditems_database)
+        self.processed = ProcessedItems(settings.determine_new_algo != SCAN_NEW_DATABASE)
         self.recentvideos = {'movie': [], 'tvshow': [], 'episode': [], 'musicvideo': []}
         self.stoppeditems = set()
         self._signal = None
@@ -133,15 +134,24 @@ class ArtworkService(xbmc.Monitor):
                 if signal == 'allvideos':
                     successful = self.process_allvideos()
                     self.notify_finished('Video', successful)
+                    settings.set_last_video_run(str(_get_date_numeric()))
                 if signal == 'newvideos':
-                    successful = self.process_allvideos(self.processed.does_not_exist)
+                    if settings.determine_new_algo == SCAN_NEW_DAYS:
+                        do_new = settings.last_video_run and float(settings.last_video_run) > _get_date_numeric(45)
+                        successful = self.process_newvideos() if do_new else self.process_allvideos()
+                    else:
+                        successful = self.process_allvideos(self.processed.does_not_exist)
                     self.notify_finished('Video', successful)
+                    settings.set_last_video_run(str(_get_date_numeric()))
                 if signal == 'allmusic':
                     successful = self.process_allmusic()
                     self.notify_finished('Music', successful)
+                    settings.set_last_music_run(str(_get_date_numeric()))
                 if signal == 'newmusic':
-                    successful = self.process_allmusic(self.processed.does_not_exist)
+                    do_new = settings.last_music_run and float(settings.last_music_run) > _get_date_numeric(45)
+                    successful = self.process_newmusic() if do_new else self.process_allmusic()
                     self.notify_finished('Music', successful)
+                    settings.set_last_music_run(str(_get_date_numeric()))
                 elif signal == 'recentvideos_really':
                     self.process_recentvideos()
 
@@ -172,6 +182,58 @@ class ArtworkService(xbmc.Monitor):
                         yield item
                     else:
                         count += 1
+
+        result = self.processor.process_list_with_total(flatten_to_mediaitems(), totalcount)
+        return result
+
+    def process_newvideos(self):
+        media_lists = [quickjson.iter_new_item_list(mediatype)
+            for mediatype in (mediatypes.EPISODE, mediatypes.MOVIE, mediatypes.MUSICVIDEO)]
+        # doesn't count seasons, tvshows, or movie sets
+        totalcount = sum(media_list[1] for media_list in media_lists)
+
+        parent_items = []
+        added_seasons = set()
+        added_tvshows = set()
+        added_sets = set()
+
+        def flatten_to_mediaitems():
+            for medialist in media_lists:
+                for mediaitem in medialist[0]:
+                    jsonitem = info.MediaItem(mediaitem)
+                    yield jsonitem
+                    if jsonitem.mediatype == mediatypes.EPISODE:
+                        if mediaitem['seasonid'] not in added_seasons:
+                            season = quickjson.get_item_details(mediaitem['seasonid'], mediatypes.SEASON)
+                            parent_items.append(info.MediaItem(season))
+                            added_seasons.add(mediaitem['seasonid'])
+                        if mediaitem['tvshowid'] not in added_tvshows:
+                            tvshow = quickjson.get_item_details(mediaitem['tvshowid'], mediatypes.TVSHOW)
+                            parent_items.append(info.MediaItem(tvshow))
+                            added_tvshows.add(mediaitem['tvshowid'])
+                    if jsonitem.mediatype == mediatypes.MOVIE and mediaitem.get('setid'):
+                        if mediaitem['setid'] not in added_sets:
+                            movieset = quickjson.get_item_details(mediaitem['setid'], mediatypes.MOVIESET)
+                            parent_items.append(info.MediaItem(movieset))
+                            added_sets.add(mediaitem['setid'])
+
+            for item in parent_items:
+                yield item
+
+        result = self.processor.process_list_with_total(flatten_to_mediaitems(), totalcount)
+        return result
+
+    def process_newmusic(self):
+        start_date = datetime.fromtimestamp(float(settings.last_music_run), timezone.utc)
+        media_lists = [quickjson.iter_new_music_list(mediatype, start_date)
+            for mediatype in (mediatypes.ARTIST, mediatypes.ALBUM, mediatypes.SONG)]
+        totalcount = sum(media_list[1] for media_list in media_lists)
+
+        def flatten_to_mediaitems():
+            for medialist in media_lists:
+                for mediaitem in medialist[0]:
+                    jsonitem = info.MediaItem(mediaitem)
+                    yield jsonitem
 
         result = self.processor.process_list_with_total(flatten_to_mediaitems(), totalcount)
         return result
@@ -208,6 +270,13 @@ class ArtworkService(xbmc.Monitor):
         log("updating settings")
         settings.update_settings()
         mediatypes.update_settings()
+
+def _get_date_numeric(past_days=0):
+    '''Get the unix timestamp of the date `past_days` in the the past.'''
+    date = pykodi.datetime_now(timezone.utc)
+    if past_days:
+        date -= timedelta(days=past_days)
+    return (date - datetime(1970, 1, 1, tzinfo=timezone.utc)).total_seconds()
 
 if __name__ == '__main__':
     log('Service started')
