@@ -16,7 +16,6 @@ class M(object):
     CACHE_VIDEO_ARTWORK = 32424
     CACHE_MUSIC_ARTWORK = 32425
     CACHED_COUNT = 32038
-    REMOTE_CONTROL_REQUIRED = 32039
     LISTING_ALL = 32028
 
     MOVIES = 36901
@@ -56,10 +55,6 @@ def main():
 
 def cache_artwork(librarytype='videos'):
     fileman = FileManager(True)
-    if fileman.use_http_cache and not fileman.imagecachebase:
-        xbmcgui.Dialog().notification("Artwork Dump", L(M.REMOTE_CONTROL_REQUIRED),
-            xbmcgui.NOTIFICATION_WARNING)
-        return
     heading = L(M.CACHE_VIDEO_ARTWORK if librarytype == 'videos' else M.CACHE_MUSIC_ARTWORK)
     cached = runon_medialist(lambda mi: fileman.cachefor(mi.art), heading, librarytype, fg=False)
     xbmcgui.Dialog().ok("Artwork Dump", L(M.CACHED_COUNT).format(cached))
